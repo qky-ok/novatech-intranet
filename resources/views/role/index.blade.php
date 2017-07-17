@@ -7,7 +7,7 @@
     <!-- Modal -->
     <div class="modal fade" id="roleModal" tabindex="-1" role="dialog" aria-labelledby="roleModalLabel">
         <div class="modal-dialog" role="document">
-            {!! Form::open(['method' => 'post']) !!}
+            {!! Form::open(['method' => 'service']) !!}
 
             <div class="modal-content">
                 <div class="modal-header">

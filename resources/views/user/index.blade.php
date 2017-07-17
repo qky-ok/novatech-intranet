@@ -4,12 +4,14 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-4">
             <h3 class="modal-title">{{ $result->total() }} {{ str_plural('User', $result->count()) }} </h3>
         </div>
-        <div class="col-md-7 page-action text-right">
+        <div class="col-md-8 page-action text-right">
             @can('add_users')
-                <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Create</a>
+                @foreach($roles as $role)
+                    <a href="{{ url('users/create', [$role->id]) }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Create {{ $role->name }}</a>
+                @endforeach
             @endcan
         </div>
     </div>
@@ -30,7 +32,7 @@
             </thead>
             <tbody>
             @foreach($result as $item)
-                <tr>
+               <tr>
                     <td>{{ $item->id }}</td>
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->email }}</td>

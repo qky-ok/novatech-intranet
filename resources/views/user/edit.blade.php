@@ -18,8 +18,8 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
-                        {!! Form::model($user, ['method' => 'PUT', 'route' => ['users.update',  $user->id ] ]) !!}
-                            @include('user._form')
+                        {!! Form::model($user, ['method' => 'PUT', 'route' => 'users.update' ]) !!}
+                            @include('user.'.$user->getUserRoleId().'_form')
                             <!-- Submit Form Button -->
                             {!! Form::submit('Save Changes', ['class' => 'btn btn-primary']) !!}
                         {!! Form::close() !!}

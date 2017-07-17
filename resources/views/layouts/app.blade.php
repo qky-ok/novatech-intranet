@@ -13,6 +13,7 @@
     <!-- Styles -->
 {{--    <link href="{{ asset('css/app.css') }}" rel="stylesheet">--}}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/intranet.css">
 
     <style>
         .result-set { margin-top: 1em }
@@ -40,7 +41,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        <img src="{{ asset('img/logo-novatech.png') }}"/>
                     </a>
                 </div>
 
@@ -51,16 +52,14 @@
                             @can('view_users')
                                 <li class="{{ Request::is('users*') ? 'active' : '' }}">
                                     <a href="{{ route('users.index') }}">
-                                        <span class="text-info glyphicon glyphicon-user"></span> Users
+                                        <!--<span class="text-info glyphicon glyphicon-user"></span>--> Users
                                     </a>
                                 </li>
                             @endcan
 
-                            @can('view_posts')
-                                <li class="{{ Request::is('posts*') ? 'active' : '' }}">
-                                    <a href="{{ route('posts.index') }}">
-                                        <span class="text-success glyphicon glyphicon-text-background"></span> Posts
-                                    </a>
+                            @can('view_services')
+                                <li class="{{ Request::is('services*') ? 'active' : '' }}">
+                                    <a href="{{ route('services.index') }}">Services</a>
                                 </li>
                             @endcan
                         @endif
@@ -76,9 +75,13 @@
 
                             @can('view_roles')
                             <li class="{{ Request::is('roles*') ? 'active' : '' }}">
-                                <a href="{{ route('roles.index') }}">
-                                    <span class="text-danger glyphicon glyphicon-lock"></span> Roles
-                                </a>
+                                <a href="{{ route('roles.index') }}">Roles</a>
+                            </li>
+                            @endcan
+
+                            @can('view_states')
+                            <li class="{{ Request::is('states*') ? 'active' : '' }}">
+                                <a href="{{ route('states.index') }}">States</a>
                             </li>
                             @endcan
 

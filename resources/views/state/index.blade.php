@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Posts')
+@section('title', 'States')
 
 @section('content')
     <div class="row">
         <div class="col-md-5">
-            <h3 class="modal-title">{{ $result->total() }} {{ str_plural('Post', $result->count()) }} </h3>
+            <h3 class="modal-title">{{ $result->total() }} {{ str_plural('State', $result->count()) }} </h3>
         </div>
         <div class="col-md-7 page-action text-right">
-            @can('add_posts')
-                <a href="{{ route('posts.create') }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Create</a>
+            @can('add_states')
+            <a href="{{ route('states.create') }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Create</a>
             @endcan
         </div>
     </div>
@@ -19,11 +19,10 @@
             <thead>
             <tr>
                 <th>Id</th>
-                <th>Title</th>
-                <th>Author</th>
+                <th>Name</th>
                 <th>Created At</th>
-                @can('edit_posts', 'delete_posts')
-                    <th class="text-center">Actions</th>
+                @can('edit_states', 'delete_states')
+                <th class="text-center">Actions</th>
                 @endcan
             </tr>
             </thead>
@@ -31,13 +30,13 @@
             @foreach($result as $item)
                 <tr>
                     <td>{{ $item->id }}</td>
-                    <td>{{ $item->title }}</td>
-                    <td>{{ $item->user['name'] }}</td>
+                    <td>{{ $item->name }}</td>
                     <td>{{ $item->created_at->toFormattedDateString() }}</td>
-                    @can('edit_posts', 'delete_posts')
+
+                    @can('edit_states')
                     <td class="text-center">
                         @include('shared._actions', [
-                            'entity' => 'posts',
+                            'entity' => 'states',
                             'id' => $item->id
                         ])
                     </td>

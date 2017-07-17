@@ -1,0 +1,74 @@
+@novatech-primary-color           : #005a95;
+@novatech-secondary-color : #8aa4c3;
+
+.navbar-default {
+  background-color: @novatech-primary-color;
+  border: none;
+  min-height: 0;
+
+  .navbar-brand{
+    height: auto;
+    padding: 10px 20px 0 0px;
+
+    img{
+      width: 120px;
+      padding: 0px 0 0 0;
+      height: auto;
+      line-height: 0;
+    }
+  }
+
+  .navbar-nav{
+    .active, .open{
+      a{
+        background-color: @novatech-secondary-color;
+        &:hover, &:focus {
+          background-color: @novatech-secondary-color;
+        }
+      }
+    }
+
+    li{
+      a{
+        padding: 14px 15px;
+
+        &:hover{
+          background-color: @novatech-secondary-color;
+        }
+
+        &:focus{
+          background-color: @novatech-primary-color;
+        }
+      }
+    }
+
+    .dropdown{
+      .label{
+        padding: 3px 7px 4px 7px;
+        margin: 0px 0 0 2px;
+      }
+
+      .dropdown-menu{
+        li{
+          a{
+            background-color: white;
+
+            &:hover, &:focus {
+              color: @novatech-primary-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.container{
+  .m-b{
+    margin-bottom: 40px;
+
+    .panel {
+      margin-bottom: 10px;
+    }
+  }
+}

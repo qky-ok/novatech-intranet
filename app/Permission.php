@@ -17,10 +17,15 @@ class Permission extends \Spatie\Permission\Models\Permission{
             'edit_roles',
             'delete_roles',
 
-            'view_posts',
-            'add_posts',
-            'edit_posts',
-            'delete_posts',
+            'view_states',
+            'add_states',
+            'edit_states',
+            'delete_states',
+
+            'view_services',
+            'add_services',
+            'edit_services',
+            'delete_services',
         ];
     }
 }

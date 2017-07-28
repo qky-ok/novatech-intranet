@@ -16,15 +16,17 @@
         <table class="table table-bordered table-striped table-hover" id="data-table">
             <tbody>
             @foreach($history as $incidence)
-                <tr>
-                    @if($incidence->id_state != null && $incidence->edited_fields != null)
-                        <td><b>{{ $incidence->created_at->format('d/m/Y H:i:s') }}:</b> User <b>{{ $incidence->cas()->name }}</b> changed the Service's State to <b>{{ $incidence->state()->name }}</b> and edited the following fields: <b>{{ $incidence->formattedEditedFields() }}</b></td>
-                    @elseif($incidence->id_state != null && $incidence->edited_fields == null)
-                        <td><b>{{ $incidence->created_at->format('d/m/Y H:i:s') }}:</b> User <b>{{ $incidence->cas()->name }}</b> changed the Service's State to <b>{{ $incidence->state()->name }}</b></td>
-                    @else
-                        <td><b>{{ $incidence->created_at->format('d/m/Y H:i:s') }}:</b> User <b>{{ $incidence->cas()->name }}</b> edited the following fields: <b>{{ $incidence->formattedEditedFields() }}</b></td>
+                @if($incidence->id_state != null && $incidence->edited_fields != null)
+                    @if($role->canViewState($incidence->id_state))
+                        <tr><td><b>{{ $incidence->created_at->format('d/m/Y H:i:s') }}:</b> User <b>{{ $incidence->cas()->name }}</b> changed the Service's State to <b>{{ $incidence->state()->name }}</b> and edited the following fields: <b>{{ $incidence->formattedEditedFields() }}</b></td></tr>
                     @endif
-                </tr>
+                @elseif($incidence->id_state != null && $incidence->edited_fields == null)
+                    @if($role->canViewState($incidence->id_state))
+                        <tr><td><b>{{ $incidence->created_at->format('d/m/Y H:i:s') }}:</b> User <b>{{ $incidence->cas()->name }}</b> changed the Service's State to <b>{{ $incidence->state()->name }}</b></td></tr>
+                    @endif
+                @else
+                    <tr><td><b>{{ $incidence->created_at->format('d/m/Y H:i:s') }}:</b> User <b>{{ $incidence->cas()->name }}</b> edited the following fields: <b>{{ $incidence->formattedEditedFields() }}</b></td></tr>
+                @endif
             @endforeach
             </tbody>
         </table>

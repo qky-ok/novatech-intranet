@@ -14,8 +14,8 @@
         </div>
     </div>
 
-    <div class="result-set">
-        <table class="table table-bordered table-striped table-hover" id="data-table">
+    <div class="result-set services">
+        <table class="table table-bordered table-striped table-hover" id="services-data-table">
             <thead>
             <tr>
                 <th>Id</th>
@@ -25,7 +25,7 @@
                 <th>History</th>
                 <th>Created At</th>
                 @can('edit_services', 'delete_services')
-                    <th class="text-center">Actions</th>
+                    <th>Actions</th>
                 @endcan
             </tr>
             </thead>
@@ -36,7 +36,7 @@
                     <td>{{ $item->title }}</td>
                     <td>{{ $item->state()->name }}</td>
                     <td>{{ $item->cas()->name }}</td>
-                    <td>
+                    <td class="text-center">
                         {!! Form::open( ['method' => 'post', 'url' => route('services.history'), 'style' => 'display: inline']) !!}
                             {!! Form::text('id', $item->id, ['class' => 'hidden']) !!}
                             <button type="submit" class="btn-delete btn btn-xs btn-info">
@@ -44,7 +44,7 @@
                             </button>
                         {!! Form::close() !!}
                     </td>
-                    <td>{{ $item->created_at->toFormattedDateString() }}</td>
+                    <td>{{ $item->created_at->format('d/m/Y H:i:s') }}</td>
                     @can('edit_services', 'delete_services')
                     <td class="text-center">
                         @include('shared._actions', [
@@ -62,5 +62,4 @@
             {{ $result->links() }}
         </div>
     </div>
-
 @endsection

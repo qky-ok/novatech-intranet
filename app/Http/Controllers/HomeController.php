@@ -12,9 +12,21 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
+    public function __construct(){
+        parent::__construct();
+    }
+
+    /**
+     * Show the application initial page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(){
+        /*Controller::addCss('/js/datatables_1.10.15/datatables.min.css');
+        Controller::addJsFooter('/js/datatables_1.10.15/datatables.min.js');*/
+        Controller::addJsFooter('/js/index.js');
+
+        return view('intranet');
     }
 
     /**
@@ -22,8 +34,9 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return view('home');
+    public function home(){
+        Controller::addJsFooter('/js/index.js');
+
+        return view('intranet');
     }
 }

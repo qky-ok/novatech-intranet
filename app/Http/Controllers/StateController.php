@@ -45,6 +45,8 @@ class StateController extends Controller
         $state->name    = $request->name;
 
         if($state->save()){
+            $state->viewRoles()->attach(1); // Admin
+
             flash('State has been created.');
         } else {
             flash()->error('Unable to create state.');

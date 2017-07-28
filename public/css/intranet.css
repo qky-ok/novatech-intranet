@@ -1,13 +1,24 @@
+table td {
+  vertical-align: middle;
+}
+table td p {
+  margin: 0;
+}
 .navbar-default {
   background-color: #005a95;
   border: none;
   min-height: 0;
 }
-.navbar-default .navbar-brand {
-  height: auto;
-  padding: 10px 20px 0 0px;
+.navbar-default .navbar-header.nav-bar-guest {
+  margin: 0 auto 9px;
+  width: 112px;
+  float: none;
 }
-.navbar-default .navbar-brand img {
+.navbar-default .navbar-header .navbar-brand {
+  height: auto;
+  padding: 9px 20px 0 0px;
+}
+.navbar-default .navbar-header .navbar-brand img {
   width: 120px;
   padding: 0px 0 0 0;
   height: auto;
@@ -33,8 +44,10 @@
   background-color: #005a95;
 }
 .navbar-default .navbar-nav .dropdown .label {
-  padding: 3px 7px 4px 7px;
+  padding: 4px 7px 4px 7px;
   margin: 0px 0 0 2px;
+  vertical-align: text-bottom;
+  display: inline-block;
 }
 .navbar-default .navbar-nav .dropdown .dropdown-menu li a {
   background-color: white;
@@ -43,9 +56,77 @@
 .navbar-default .navbar-nav .dropdown .dropdown-menu li a:focus {
   color: #005a95;
 }
+.container .modal-title.home {
+  margin: 0 auto 13px;
+  width: 110px;
+}
+.container table th {
+  text-align: center;
+}
 .container .m-b {
   margin-bottom: 40px;
 }
 .container .m-b .panel {
   margin-bottom: 10px;
+}
+.container .service-search-form {
+  display: block;
+  margin: 5px auto 0;
+  width: 50%;
+}
+.container .service-search-form .form-control {
+  display: inline-block;
+  width: 80%;
+}
+.container .service-search-form .btn-primary {
+  display: inline-block;
+  vertical-align: baseline;
+  margin-left: 5px;
+}
+.container .result-set {
+  position: relative;
+}
+.container .result-set .service-not-found {
+  font-size: 16px;
+}
+.container .result-set .loading {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: white;
+  opacity: 0.7;
+  padding: 30px 0;
+  z-index: 99999;
+}
+.container .result-set .loading img {
+  width: 120px;
+  height: auto;
+  line-height: 0;
+  position: absolute;
+  top: 45%;
+  left: 43.5%;
+}
+.container .result-set #index-data-table {
+  margin: 30px 0 0;
+  display: none;
+}
+.container .result-set #services-data-table {
+  margin: 30px 0 0;
+}
+.panel .panel-title a {
+  font-weight: bold;
+}
+.panel .panel-title span {
+  display: inline-block;
+  margin-left: 5px;
+}
+.panel .panel-body .permissions-panel-title {
+  display: block;
+  margin: 0px 15px 5px 15px;
+  font-weight: 400;
+}
+.panel .panel-body .permissions-panel-title.view-states {
+  margin-top: 20px;
 }

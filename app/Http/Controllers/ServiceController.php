@@ -7,20 +7,30 @@ use App\Service;
 use App\ServiceHistory;
 use App\State;
 use App\User;
+use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Response;
 
 class ServiceController extends Controller
 {
     use Authorizable;
+
+    function __construct(){
+        parent::__construct();
+
+        Controller::addJsFooter('/js/service.js');
+    }
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
+        Controller::addCss('/js/datatables_1.10.15/datatables.min.css');
+        Controller::addJsFooter('/js/datatables_1.10.15/datatables.min.js');
+
         $result = Service::latest()->paginate();
         return view('service.index', compact('result'));
     }
@@ -74,7 +84,7 @@ class ServiceController extends Controller
 
         flash('Service has been added');
 
-        return redirect()->back();
+        return redirect()->route('services.index');
     }
 
     /**
@@ -86,6 +96,55 @@ class ServiceController extends Controller
     public function show(Service $service)
     {
         //
+    }
+
+    /**
+     * Search a specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(String $search){
+        $search     = filter_var($search, FILTER_SANITIZE_STRING);
+        $service    = Service::where('title', $search)->first();
+        $return     = ['error' => 'not found'];
+        $status     = 404;
+
+        if(!empty($service)){
+            $role_id    = (Auth::guest()) ? 2 : Auth::user()->roles->first()->id; // User(2) es el default del guest
+            $state_id   = $service->state()->id;
+            $state_name = '';
+            $role       = Role::where('id', $role_id)->first();
+
+            if($role->canViewState($state_id)){
+                $state_name = $service->state()->name;
+            }else{
+                $service_history = $service->history();
+
+                foreach($service_history as $incidence){
+                    if($incidence->id_state != null){
+                        if($role->canViewState($incidence->id_state)){
+                            $state      = State::where('id', $incidence->id_state)->first();
+                            $state_name = $state->name;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if($state_name != ''){
+                $return = [
+                    'id'            => $service->id,
+                    'title'         => $service->title,
+                    'description'   => $service->description,
+                    'state'         => $state_name,
+                ];
+
+                $status = 200;
+            }
+        }
+
+        return Response::json($return, $status);
     }
 
     /**
@@ -102,8 +161,9 @@ class ServiceController extends Controller
         $id_service = $request->get('id');
         $service    = Service::findOrFail($id_service);
         $history    = $service->history();
+        $role       = Role::where('id', Auth::user()->roles->first()->id)->first();
 
-        return view('service.history', compact(['service', 'history']));
+        return view('service.history', compact(['service', 'history', 'role']));
     }
 
     /**

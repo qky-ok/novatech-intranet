@@ -12,7 +12,7 @@ class ServiceHistory extends Model
      * Get the Service associated with this Service Incidence.
      */
     public function service(){
-        return $this->belongsTo('App\Http\Models\Service', 'id_service', 'id')->first();
+        return $this->belongsTo('App\Service', 'id_service', 'id')->first();
     }
 
     /**

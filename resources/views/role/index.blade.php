@@ -44,22 +44,22 @@
         </div>
     </div>
 
-
     @forelse ($roles as $role)
-        {!! Form::model($role, ['method' => 'PUT', 'route' => ['roles.update',  $role->id ], 'class' => 'm-b']) !!}
+        {!! Form::model($role, ['method' => 'POST', 'route' => ['roles.update'], 'class' => 'm-b']) !!}
+            {!! Form::hidden('id', $role->id) !!}
 
-        @if($role->name === 'Admin')
-            @include('shared._permissions', [
-                          'title' => $role->name .' Permissions',
-                          'options' => ['disabled'] ])
-        @else
-            @include('shared._permissions', [
-                          'title' => $role->name .' Permissions',
-                          'model' => $role ])
-            @can('edit_roles')
-                {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-            @endcan
-        @endif
+            @if($role->name === 'Admin')
+                @include('shared._permissions', [
+                              'title'   => $role->name,
+                              'options' => ['disabled'] ])
+            @else
+                @include('shared._permissions', [
+                              'title' => $role->name,
+                              'model' => $role ])
+                @can('edit_roles')
+                    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                @endcan
+            @endif
 
         {!! Form::close() !!}
 

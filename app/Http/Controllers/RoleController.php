@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Authorizable;
 use App\Permission;
 use App\Role;
+use App\State;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
-{
+class RoleController extends Controller{
     use Authorizable;
 
     /**
@@ -18,10 +18,11 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
-        $permissions = Permission::all();
+        $roles          = Role::all();
+        $permissions    = Permission::all();
+        $states         = State::all();
 
-        return view('role.index', compact('roles', 'permissions'));
+        return view('role.index', compact('roles', 'permissions', 'states'));
     }
 
     /**
@@ -45,11 +46,11 @@ class RoleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request){
+        $id = $request->get('id');
+
         if($role = Role::findOrFail($id)) {
             // admin role has everything
             if($role->name === 'Admin') {
@@ -58,8 +59,10 @@ class RoleController extends Controller
             }
 
             $permissions = $request->get('permissions', []);
-
             $role->syncPermissions($permissions);
+
+            $states = $request->get('states', []);
+            $role->syncViewStates($states);
 
             flash( $role->name . ' permissions has been updated.');
         } else {

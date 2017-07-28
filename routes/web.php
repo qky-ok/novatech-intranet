@@ -11,19 +11,19 @@
 |
 */
 
-Route::get('/', function(){
-    return view('welcome');
+Route::group(['middleware' => 'web'], function () {
+    Route::get('/', ['as' => 'intranet', 'uses' => 'HomeController@index']);
+    Route::get('/services/search/{search}', ['as' => 'services.search', 'uses' => 'ServiceController@search']);
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => ['auth']], function(){
     /*Route::resource('users', 'UserController');
     Route::resource('roles', 'RoleController');
     Route::resource('states', 'StateController');
     Route::resource('services', 'ServiceController');*/
+    Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@home']);
 
     Route::group(['prefix' => 'users'], function() {
         Route::get('/', ['as' => 'users.index', 'uses' => 'UserController@index']);
@@ -41,7 +41,7 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('/create', ['as' => 'roles.create', 'uses' => 'RoleController@create']);
         Route::post('/store', ['as' => 'roles.store', 'uses' => 'RoleController@store']);
         Route::get('/edit', ['as' => 'roles.edit', 'uses' => 'RoleController@edit']);
-        Route::put('/update', ['as' => 'roles.update', 'uses' => 'RoleController@update']);
+        Route::post('/update', ['as' => 'roles.update', 'uses' => 'RoleController@update']);
         Route::delete('/destroy', ['as' => 'roles.destroy', 'uses' => 'RoleController@destroy']);
     });
 

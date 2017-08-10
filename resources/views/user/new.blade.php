@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create')
+@section('title', 'Crear Usuario')
 
 @section('content')
 
@@ -9,7 +9,7 @@
             <h3>Create {{ $role->name }}</h3>
         </div>
         <div class="col-md-7 page-action text-right">
-            <a href="{{ route('users.index') }}" class="btn btn-default btn-sm"> <i class="fa fa-arrow-left"></i> Back</a>
+            <a href="{{ route('users.index') }}" class="btn btn-default btn-sm"> <i class="fa fa-arrow-left"></i> Volver</a>
         </div>
     </div>
 
@@ -18,7 +18,7 @@
             {!! Form::open(['route' => ['users.store'] ]) !!}
                 @include('user.'.$role->id.'_form')
                 <!-- Submit Form Button -->
-                {!! Form::submit('Create', ['class' => 'btn btn-primary']) !!}
+                {!! Form::submit('Crear', ['class' => 'btn btn-primary']) !!}
             {!! Form::close() !!}
         </div>
     </div>

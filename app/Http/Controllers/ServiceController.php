@@ -31,7 +31,13 @@ class ServiceController extends Controller
         Controller::addCss('/js/datatables_1.10.15/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.15/datatables.min.js');
 
-        $result = Service::latest()->paginate();
+        $role = Auth::user()->roles->first()->id;
+        if($role == env('CAS_USER')){
+            $result = Service::where('id_user', Auth::user()->id)->paginate();
+        }else{
+            $result = Service::latest()->paginate();
+        }
+
         return view('service.index', compact('result'));
     }
 
@@ -79,10 +85,10 @@ class ServiceController extends Controller
         $serviceHistory->id_service     = $service->id;
         $serviceHistory->id_user        = Auth::user()->id;
         $serviceHistory->id_state       = $service->id_state;
-        $serviceHistory->edited_fields  = 'all';
+        $serviceHistory->edited_fields  = 'todos';
         $serviceHistory->save();
 
-        flash('Service has been added');
+        flash('El Service ha sido creado.');
 
         return redirect()->route('services.index');
     }
@@ -223,9 +229,9 @@ class ServiceController extends Controller
             $service->description   = $request->get('description');
             $service->save();
 
-            if($service->id_user != $old_id_user)           $edited_fields[]    = 'id_user';
-            if($service->title != $old_title)               $edited_fields[]    = 'title';
-            if($service->description != $old_description)   $edited_fields[]    = 'description';
+            if($service->id_user != $old_id_user)           $edited_fields[]    = 'usuario';
+            if($service->title != $old_title)               $edited_fields[]    = 'título';
+            if($service->description != $old_description)   $edited_fields[]    = 'descripción';
 
             $serviceHistory                 = new ServiceHistory();
             $serviceHistory->id_service     = $id_service;
@@ -234,7 +240,7 @@ class ServiceController extends Controller
             $serviceHistory->edited_fields  = (!empty($edited_fields)) ? implode('|', $edited_fields) : null;
             $serviceHistory->save();
 
-            flash()->success('Service has been updated.');
+            flash()->success('El Service ha sido actualizado.');
         }else{
 
         }
@@ -245,22 +251,26 @@ class ServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Service  $service
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Service $service)
-    {
+    public function destroy(Request $request){
+        $this->validate($request, [
+            'id' => 'required|min:1'
+        ]);
+
+        $id = $request->get('id');
         $me = Auth::user();
 
         if( $me->hasRole('Admin') ) {
-            $service = Service::findOrFail($service->id);
+            $service = Service::findOrFail($id);
         } else {
-            $service = $me->services()->findOrFail($service->id);
+            $service = $me->services()->findOrFail($id);
         }
 
         $service->delete();
 
-        flash()->success('Service has been deleted.');
+        flash()->success('El Service ha sido borrado.');
 
         return redirect()->route('services.index');
     }

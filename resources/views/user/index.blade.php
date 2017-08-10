@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Users')
+@section('title', 'Usuarios')
 
 @section('content')
     <div class="row">
@@ -10,7 +10,7 @@
         <div class="col-md-8 page-action text-right">
             @can('add_users')
                 @foreach($roles as $role)
-                    <a href="{{ url('users/create', [$role->id]) }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Create {{ $role->name }}</a>
+                    <a href="{{ url('users/create', [$role->id]) }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Crear {{ $role->name }}</a>
                 @endforeach
             @endcan
         </div>
@@ -21,12 +21,12 @@
             <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
+                <th>Nombre</th>
                 <th>Email</th>
-                <th>Role</th>
-                <th>Created At</th>
+                <th>Rol</th>
+                <th>Creado</th>
                 @can('edit_users', 'delete_users')
-                <th class="text-center">Actions</th>
+                <th class="text-center">Acciones</th>
                 @endcan
             </tr>
             </thead>

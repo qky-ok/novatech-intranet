@@ -31,8 +31,8 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('/create/{role_id?}', ['as' => 'users.create', 'uses' => 'UserController@create']);
         Route::post('/store', ['as' => 'users.store', 'uses' => 'UserController@store']);
         Route::get('/edit', ['as' => 'users.edit', 'uses' => 'UserController@edit']);
-        Route::put('/update', ['as' => 'users.update', 'uses' => 'UserController@update']);
-        Route::delete('/destroy', ['as' => 'users.destroy', 'uses' => 'UserController@destroy']);
+        Route::post('/update', ['as' => 'users.update', 'uses' => 'UserController@update']);
+        Route::post('/destroy', ['as' => 'users.destroy', 'uses' => 'UserController@destroy']);
     });
 
     Route::group(['prefix' => 'roles'], function() {
@@ -42,7 +42,7 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/store', ['as' => 'roles.store', 'uses' => 'RoleController@store']);
         Route::get('/edit', ['as' => 'roles.edit', 'uses' => 'RoleController@edit']);
         Route::post('/update', ['as' => 'roles.update', 'uses' => 'RoleController@update']);
-        Route::delete('/destroy', ['as' => 'roles.destroy', 'uses' => 'RoleController@destroy']);
+        Route::post('/destroy', ['as' => 'roles.destroy', 'uses' => 'RoleController@destroy']);
     });
 
     Route::group(['prefix' => 'states'], function() {
@@ -51,8 +51,8 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('/create', ['as' => 'states.create', 'uses' => 'StateController@create']);
         Route::post('/store', ['as' => 'states.store', 'uses' => 'StateController@store']);
         Route::get('/edit', ['as' => 'states.edit', 'uses' => 'StateController@edit']);
-        Route::put('/update', ['as' => 'states.update', 'uses' => 'StateController@update']);
-        Route::delete('/destroy', ['as' => 'states.destroy', 'uses' => 'StateController@destroy']);
+        Route::post('/update', ['as' => 'states.update', 'uses' => 'StateController@update']);
+        Route::post('/destroy', ['as' => 'states.destroy', 'uses' => 'StateController@destroy']);
     });
 
     Route::group(['prefix' => 'services'], function() {
@@ -61,8 +61,8 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('/create', ['as' => 'services.create', 'uses' => 'ServiceController@create']);
         Route::post('/store', ['as' => 'services.store', 'uses' => 'ServiceController@store']);
         Route::get('/edit', ['as' => 'services.edit', 'uses' => 'ServiceController@edit']);
-        Route::put('/update', ['as' => 'services.update', 'uses' => 'ServiceController@update']);
+        Route::post('/update', ['as' => 'services.update', 'uses' => 'ServiceController@update']);
         Route::post('/history', ['as' => 'services.history', 'uses' => 'ServiceController@getHistory']);
-        Route::delete('/destroy', ['as' => 'services.destroy', 'uses' => 'ServiceController@destroy']);
+        Route::post('/destroy', ['as' => 'services.destroy', 'uses' => 'ServiceController@destroy']);
     });
 });

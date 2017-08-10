@@ -47,9 +47,9 @@ class StateController extends Controller
         if($state->save()){
             $state->viewRoles()->attach(1); // Admin
 
-            flash('State has been created.');
+            flash('El Estado ha sido creado.');
         } else {
-            flash()->error('Unable to create state.');
+            flash()->error('El Estado no pudo crearse.');
         }
 
         return redirect()->route('states.index');
@@ -61,8 +61,13 @@ class StateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id){
-        $state = State::find($id);
+    public function edit(Request $request){
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        $id     = $request->get('id');
+        $state  = State::find($id);
         return view('state.edit', compact('state'));
     }
 
@@ -70,22 +75,23 @@ class StateController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id){
+    public function update(Request $request){
         $this->validate($request, [
-            'name' => 'bail|required|min:2'
+            'id'    => 'required',
+            'name'  => 'bail|required|min:2'
         ]);
 
         // Get the state
-        $state = State::findOrFail($id);
+        $id     = $request->get('id');
+        $state  = State::findOrFail($id);
 
         // Update state
         $state->name = $request->get('name');
         $state->save();
 
-        flash()->success('State has been updated.');
+        flash()->success('El Estado ha sido actualizado.');
 
         return redirect()->route('states.index');
     }
@@ -93,15 +99,20 @@ class StateController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * @internal param Request $request
      */
-    public function destroy($id){
+    public function destroy(Request $request){
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        $id = $request->get('id');
         if(State::findOrFail($id)->delete()){
-            flash()->success('State has been deleted');
+            flash()->success('El Estado ha sido borrado');
         }else{
-            flash()->success('State not deleted');
+            flash()->warning('El Estado no pudo borrarse');
         }
 
         return redirect()->back();

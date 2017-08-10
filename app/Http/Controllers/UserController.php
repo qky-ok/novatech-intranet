@@ -118,9 +118,9 @@ class UserController extends Controller
                     $extendedUser->save();
             }
 
-            flash('User has been created.');
+            flash('El usuario ha sido creado.');
         }else{
-            flash()->error('Unable to create user.');
+            flash()->error('No pudo crearse el usuario.');
         }
 
         return redirect()->route('users.index');
@@ -146,10 +146,10 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         $this->validate($request, [
-            'user' => 'required|min:1'
+            'id' => 'required|min:1'
         ]);
 
-        $id             = $request->get('user');
+        $id             = $request->get('id');
         $user           = User::find($id);
         $role           = Role::where('id', $user->getUserRoleId())->first();
         $extendedData   = $user->getExtendedData();
@@ -231,7 +231,7 @@ class UserController extends Controller
                 $extendedUser->save();
         }
 
-        flash()->success('User has been updated.');
+        flash()->success('El usuario ha sido actualizado.');
 
         return redirect()->route('users.index');
     }
@@ -252,7 +252,7 @@ class UserController extends Controller
         $id = $request->get('id');
 
         if ( Auth::user()->id == $id ) {
-            flash()->warning('Deletion of currently logged in user is not allowed :(')->important();
+            flash()->warning('No puede borrarse el usuario actualmente logueado')->important();
             return redirect()->back();
         }
 
@@ -292,9 +292,9 @@ class UserController extends Controller
 
             DB::table('model_has_roles')->where('model_id', $id)->delete();
 
-            flash()->success('User has been deleted');
+            flash()->success('El usuario ha sido borrado');
         } else {
-            flash()->success('User not deleted');
+            flash()->warning('El usuario no pudo borrarse');
         }
 
         return redirect()->back();

@@ -9,7 +9,7 @@
         </div>
         <div class="col-md-7 page-action text-right">
             @can('add_services')
-                <a href="{{ route('services.create') }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Create</a>
+                <a href="{{ route('services.create') }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Crear</a>
             @endcan
         </div>
     </div>
@@ -19,13 +19,13 @@
             <thead>
             <tr>
                 <th>Id</th>
-                <th>Title</th>
-                <th>State</th>
+                <th>Título</th>
+                <th>Estado</th>
                 <th>CAS</th>
-                <th>History</th>
-                <th>Created At</th>
+                <th>Historial</th>
+                <th>Creado</th>
                 @can('edit_services', 'delete_services')
-                    <th>Actions</th>
+                    <th>Acciones</th>
                 @endcan
             </tr>
             </thead>

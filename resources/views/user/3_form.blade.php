@@ -1,7 +1,7 @@
 <!-- Name Form Input -->
 <div class="form-group @if ($errors->has('name')) has-error @endif">
-    {!! Form::label('name', 'Name') !!}
-    {!! Form::text('name', (!empty($user->name)) ? $user->name : null, ['class' => 'form-control', 'placeholder' => 'Name']) !!}
+    {!! Form::label('name', 'Nombre') !!}
+    {!! Form::text('name', (!empty($user->name)) ? $user->name : null, ['class' => 'form-control', 'placeholder' => 'Nombre']) !!}
     @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
 </div>
 
@@ -21,7 +21,7 @@
 
 <!-- Contact Phone 1 Input -->
 <div class="form-group @if ($errors->has('contact_phone_1')) has-error @endif">
-    {!! Form::label('contact_phone_1', 'Contact Phone 1') !!}
+    {!! Form::label('contact_phone_1', 'Teléfono 1') !!}
     {!! Form::text('contact_phone_1', (!empty($extendedData->contact_phone_1)) ? $extendedData->contact_phone_1 : null, ['class' => 'form-control', 'placeholder' => '011-123-4567']) !!}
     @if ($errors->has('contact_phone_1')) <p class="help-block">{{ $errors->first('contact_phone_1') }}</p> @endif
 </div>

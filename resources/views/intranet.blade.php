@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <h3 class="modal-title home">Services</h3>
             <div class="form-group service-search-form">
-                {!! Form::text('service_search', null, ['class' => 'form-control', 'placeholder' => 'Service title']) !!}
+                {!! Form::text('service_search', null, ['class' => 'form-control', 'placeholder' => 'Título del Service']) !!}
                 {!! Form::submit('Buscar', ['class' => 'btn btn-primary search-service']) !!}
             </div>
         </div>
@@ -18,9 +18,9 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>State</th>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
             <tbody>

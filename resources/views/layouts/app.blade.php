@@ -33,9 +33,7 @@
 
     <!-- Scripts -->
     <script>
-        window.Laravel = {!! json_encode([
-            'csrfToken' => csrf_token(),
-        ]) !!};
+        window.Laravel = {!! json_encode([ 'csrfToken' => csrf_token() ]) !!};
     </script>
 </head>
 <body>
@@ -45,7 +43,7 @@
                 <div class="navbar-header{{ (Auth::guest()) ? ' nav-bar-guest' : '' }}">
                     <!-- Collapsed Hamburger -->
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
+                        <span class="sr-only">Cambiar Navegación</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -79,7 +77,7 @@
                             @can('view_users')
                             <li class="{{ Request::is('users*') ? 'active' : '' }}">
                                 <a href="{{ route('users.index') }}">
-                                    <!--<span class="text-info glyphicon glyphicon-user"></span>--> Users
+                                    <!--<span class="text-info glyphicon glyphicon-user"></span>--> Usuarios
                                 </a>
                             </li>
                             @endcan
@@ -92,7 +90,7 @@
 
                             @can('view_states')
                             <li class="{{ Request::is('states*') ? 'active' : '' }}">
-                                <a href="{{ route('states.index') }}">States</a>
+                                <a href="{{ route('states.index') }}">Estados</a>
                             </li>
                             @endcan
 

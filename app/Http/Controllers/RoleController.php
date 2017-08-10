@@ -64,9 +64,9 @@ class RoleController extends Controller{
             $states = $request->get('states', []);
             $role->syncViewStates($states);
 
-            flash( $role->name . ' permissions has been updated.');
+            flash( $role->name.': permisos actualizados.');
         } else {
-            flash()->error( 'Role with id '. $id .' note found.');
+            flash()->error('El Rol con ID '.$id.' no ha sido encontrado.');
         }
 
         return redirect()->route('roles.index');

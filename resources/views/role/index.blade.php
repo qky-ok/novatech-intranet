@@ -51,11 +51,13 @@
             @if($role->name === 'Admin')
                 @include('shared._permissions', [
                               'title'   => $role->name,
+                              'email'   => ($role->default_email != null) ? $role->default_email : null,
                               'options' => ['disabled'] ])
             @else
                 @include('shared._permissions', [
-                              'title' => $role->name,
-                              'model' => $role ])
+                              'title'   => $role->name,
+                              'email'   => ($role->default_email != null) ? $role->default_email : null,
+                              'model'   => $role ])
                 @can('edit_roles')
                     {!! Form::submit('Guardar', ['class' => 'btn btn-primary']) !!}
                 @endcan

@@ -8,8 +8,10 @@ use App\ServiceHistory;
 use App\State;
 use App\User;
 use App\Role;
+use App\Mail\ServiceStateChanged;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Response;
 
 class ServiceController extends Controller
@@ -28,8 +30,8 @@ class ServiceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        Controller::addCss('/js/datatables_1.10.15/datatables.min.css');
-        Controller::addJsFooter('/js/datatables_1.10.15/datatables.min.js');
+        Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
+        Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
 
         $role = Auth::user()->roles->first()->id;
         if($role == env('CAS_USER')){
@@ -87,6 +89,9 @@ class ServiceController extends Controller
         $serviceHistory->id_state       = $service->id_state;
         $serviceHistory->edited_fields  = 'todos';
         $serviceHistory->save();
+
+        //Send email if there are subscribers
+        $this->sendEmail($service);
 
         flash('El Service ha sido creado.');
 
@@ -234,11 +239,16 @@ class ServiceController extends Controller
             if($service->description != $old_description)   $edited_fields[]    = 'descripción';
 
             $serviceHistory                 = new ServiceHistory();
+            $new_state                      = ($service->id_state != $old_id_state) ? $service->id_state : null;
             $serviceHistory->id_service     = $id_service;
             $serviceHistory->id_user        = $user->id;
-            $serviceHistory->id_state       = ($service->id_state != $old_id_state) ? $service->id_state : null;
+            $serviceHistory->id_state       = $new_state;
             $serviceHistory->edited_fields  = (!empty($edited_fields)) ? implode('|', $edited_fields) : null;
             $serviceHistory->save();
+
+            //ToDo Acá y en Store, mandar mail a roles suscriptos
+            //Send email if state was change and there are subscribers
+            if($new_state != null) $this->sendEmail($service);
 
             flash()->success('El Service ha sido actualizado.');
         }else{
@@ -273,5 +283,23 @@ class ServiceController extends Controller
         flash()->success('El Service ha sido borrado.');
 
         return redirect()->route('services.index');
+    }
+
+    private function sendEmail(Service $service){
+        if($state = State::findOrFail($service->id_state)){
+            $state_sends_email = $state->sendsMail()->get();
+            if(!empty($state_sends_email)){
+                $role_names = [];
+                foreach($state_sends_email as $state_sends_email_row){
+                    if($role = Role::findOrFail($state_sends_email_row->pivot->role_id)){
+                        if($role->default_email != null){
+                            Mail::to($role->default_email)->send(new ServiceStateChanged($service, $state));
+                            $role_names[] = $role->name;
+                        }
+                    }
+                }
+                if(!empty($role_names)) flash()->success('Se envió un mail a los siguientes suscriptores: '.implode(', ', $role_names));
+            }
+        }
     }
 }

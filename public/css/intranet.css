@@ -130,3 +130,13 @@ table td p {
 .panel .panel-body .permissions-panel-title.view-states {
   margin-top: 20px;
 }
+.form-control.default-email {
+  margin: 10px 15px 20px;
+  width: 250px;
+}
+.role-checkbox-container {
+  margin: 0 0 10px 0;
+  padding: 0px 15px;
+  background-color: #efeeee;
+  display: inline-block;
+}

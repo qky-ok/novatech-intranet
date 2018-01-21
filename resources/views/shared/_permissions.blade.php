@@ -10,6 +10,9 @@
         <div id="dd-{{ isset($title) ? str_slug($title) :  'permissionHeading' }}" class="panel-collapse collapse {{ $closed or 'in' }}" role="tabpanel" aria-labelledby="dd-{{ isset($title) ? str_slug($title) :  'permissionHeading' }}">
             <div class="panel-body">
                 <div class="row">
+                    {!! Form::text('default_email', $email, ['class' => 'form-control default-email', 'placeholder' => 'Email del Rol', 'autocomplete' => 'off']) !!}
+                </div>
+                <div class="row">
                     <h4 class="permissions-panel-title">Permisos</h4>
 
                     @foreach($permissions as $perm)
@@ -42,19 +45,29 @@
 
                         @foreach($states as $state)
                             <?php
-                            $per_found = null;
+                            $state_found    = null;
+                            $email_found    = null;
 
                             if(isset($role)){
-                                $per_found = $role->canViewState($state->id);
+                                $state_id       = $state->id;
+                                $state_found    = $role->canViewState($state_id);
+                                $email_found    = $role->canSendEmail($state_id);
                             }
 
                             ?>
 
                             <div class="col-md-3">
-                                <div class="checkbox">
-                                    <label>
-                                        {!! Form::checkbox("states[]", $state->id, $per_found, isset($options) ? $options : []) !!} {{ $state->name }}
-                                    </label>
+                                <div class="role-checkbox-container">
+                                    <div class="checkbox">
+                                        <label>
+                                            {!! Form::checkbox("states[]", $state->id, $state_found, isset($options) ? $options : []) !!} {{ $state->name }}
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            {!! Form::checkbox("sends_mail[]", $state->id, $email_found, []) !!} envía email
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach

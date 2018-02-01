@@ -201,7 +201,6 @@ class ServiceController extends Controller
 
             if($state_name != ''){
                 $return = [
-                    'id'                    => $service->id,
                     'purchase_order_num'    => $service->purchase_order_num,
                     'date_in'               => $service->dateInToString(true),
                     'state'                 => $state_name,

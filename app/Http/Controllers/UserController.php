@@ -94,9 +94,30 @@ class UserController extends Controller
                     $extendedUser->save();
                     break;
                 case 4:
-                    $extendedUser                   = new UserCas();
-                    $extendedUser->id               = $user->id;
-                    $extendedUser->contact_phone_1  = (!empty($request->get('contact_phone_1'))) ? $request->get('contact_phone_1') : null;
+                    $extendedUser                       = new UserCas();
+                    $extendedUser->id                   = $user->id;
+                    $extendedUser->business_name        = (!empty($request->get('business_name'))) ? $request->get('business_name') : null;
+                    $extendedUser->fantasy_name         = (!empty($request->get('fantasy_name'))) ? $request->get('fantasy_name') : null;
+                    $extendedUser->address              = (!empty($request->get('address'))) ? $request->get('address') : null;
+                    $extendedUser->phone_customers      = (!empty($request->get('phone_customers'))) ? $request->get('phone_customers') : null;
+                    $extendedUser->working_hours        = (!empty($request->get('working_hours'))) ? $request->get('working_hours') : null;
+                    $extendedUser->website              = (!empty($request->get('website'))) ? $request->get('website') : null;
+                    $extendedUser->contact_email        = (!empty($request->get('contact_email'))) ? $request->get('contact_email') : null;
+                    $extendedUser->contact_name_1       = (!empty($request->get('contact_name_1'))) ? $request->get('contact_name_1') : null;
+                    $extendedUser->contact_email_1      = (!empty($request->get('contact_email_1'))) ? $request->get('contact_email_1') : null;
+                    $extendedUser->contact_phone_1      = (!empty($request->get('contact_phone_1'))) ? $request->get('contact_phone_1') : null;
+                    $extendedUser->contact_skype_1      = (!empty($request->get('contact_skype_1'))) ? $request->get('contact_skype_1') : null;
+                    $extendedUser->contact_name_2       = (!empty($request->get('contact_name_2'))) ? $request->get('contact_name_2') : null;
+                    $extendedUser->contact_phone_2      = (!empty($request->get('contact_phone_2'))) ? $request->get('contact_phone_2') : null;
+                    $extendedUser->contact_email_2      = (!empty($request->get('contact_email_2'))) ? $request->get('contact_email_2') : null;
+                    $extendedUser->contact_skype_2      = (!empty($request->get('contact_skype_2'))) ? $request->get('contact_skype_2') : null;
+                    $extendedUser->contact_name_3       = (!empty($request->get('contact_name_3'))) ? $request->get('contact_name_3') : null;
+                    $extendedUser->contact_phone_3      = (!empty($request->get('contact_phone_3'))) ? $request->get('contact_phone_3') : null;
+                    $extendedUser->contact_email_3      = (!empty($request->get('contact_email_3'))) ? $request->get('contact_email_3') : null;
+                    $extendedUser->contact_skype_3      = (!empty($request->get('contact_skype_3'))) ? $request->get('contact_skype_3') : null;
+                    $extendedUser->cuit                 = (!empty($request->get('cuit'))) ? $request->get('cuit') : null;
+                    $extendedUser->iibb                 = (!empty($request->get('iibb'))) ? $request->get('iibb') : null;
+                    $extendedUser->part_sending_method  = (!empty($request->get('part_sending_method'))) ? $request->get('part_sending_method') : null;
                     $extendedUser->save();
                     break;
                 case 5:
@@ -211,8 +232,29 @@ class UserController extends Controller
                 $extendedUser->save();
                 break;
             case 4:
-                $extendedUser                   = UserCas::findOrFail($user->id);
-                $extendedUser->contact_phone_1  = (!empty($request->get('contact_phone_1'))) ? $request->get('contact_phone_1') : null;
+                $extendedUser                       = UserCas::findOrFail($user->id);
+                $extendedUser->business_name        = (!empty($request->get('business_name'))) ? $request->get('business_name') : null;
+                $extendedUser->fantasy_name         = (!empty($request->get('fantasy_name'))) ? $request->get('fantasy_name') : null;
+                $extendedUser->address              = (!empty($request->get('address'))) ? $request->get('address') : null;
+                $extendedUser->phone_customers      = (!empty($request->get('phone_customers'))) ? $request->get('phone_customers') : null;
+                $extendedUser->working_hours        = (!empty($request->get('working_hours'))) ? $request->get('working_hours') : null;
+                $extendedUser->website              = (!empty($request->get('website'))) ? $request->get('website') : null;
+                $extendedUser->contact_email        = (!empty($request->get('contact_email'))) ? $request->get('contact_email') : null;
+                $extendedUser->contact_name_1       = (!empty($request->get('contact_name_1'))) ? $request->get('contact_name_1') : null;
+                $extendedUser->contact_email_1      = (!empty($request->get('contact_email_1'))) ? $request->get('contact_email_1') : null;
+                $extendedUser->contact_phone_1      = (!empty($request->get('contact_phone_1'))) ? $request->get('contact_phone_1') : null;
+                $extendedUser->contact_skype_1      = (!empty($request->get('contact_skype_1'))) ? $request->get('contact_skype_1') : null;
+                $extendedUser->contact_name_2       = (!empty($request->get('contact_name_2'))) ? $request->get('contact_name_2') : null;
+                $extendedUser->contact_phone_2      = (!empty($request->get('contact_phone_2'))) ? $request->get('contact_phone_2') : null;
+                $extendedUser->contact_email_2      = (!empty($request->get('contact_email_2'))) ? $request->get('contact_email_2') : null;
+                $extendedUser->contact_skype_2      = (!empty($request->get('contact_skype_2'))) ? $request->get('contact_skype_2') : null;
+                $extendedUser->contact_name_3       = (!empty($request->get('contact_name_3'))) ? $request->get('contact_name_3') : null;
+                $extendedUser->contact_phone_3      = (!empty($request->get('contact_phone_3'))) ? $request->get('contact_phone_3') : null;
+                $extendedUser->contact_email_3      = (!empty($request->get('contact_email_3'))) ? $request->get('contact_email_3') : null;
+                $extendedUser->contact_skype_3      = (!empty($request->get('contact_skype_3'))) ? $request->get('contact_skype_3') : null;
+                $extendedUser->cuit                 = (!empty($request->get('cuit'))) ? $request->get('cuit') : null;
+                $extendedUser->iibb                 = (!empty($request->get('iibb'))) ? $request->get('iibb') : null;
+                $extendedUser->part_sending_method  = (!empty($request->get('part_sending_method'))) ? $request->get('part_sending_method') : null;
                 $extendedUser->save();
                 break;
             case 5:

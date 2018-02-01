@@ -18,7 +18,8 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
-                        {!! Form::model($service, ['method' => 'POST', 'route' => ['services.update'] ]) !!}
+                        {!! Form::model($service, ['method' => 'POST', 'route' => ['services.update'], 'class' => 'service-form']) !!}
+                            {!! Form::hidden('id', $service->id) !!}
                             @include('service._form')
                             <!-- Submit Form Button -->
                             {!! Form::submit('Guardar', ['class' => 'btn btn-primary']) !!}

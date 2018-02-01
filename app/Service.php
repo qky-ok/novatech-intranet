@@ -78,4 +78,40 @@ class Service extends Model{
     {
         return $this->hasMany('App\ServiceHistory', 'id_service')->orderBy('created_at', 'desc')->get();
     }
+
+    public function dateInToString($safe = false){
+        if(($this->date_in === '1970-01-01 00:00:00' || $this->date_in === '' || $this->date_in === null) && $safe){
+            return '-';
+        }else if($this->date_in === '1970-01-01 00:00:00' || $this->date_in === '' || $this->date_in === null){
+            return '';
+        }else{
+            $timestamp  = explode(' ', $this->date_in);
+            $date       = explode('-', $timestamp[0]);
+            return $date[2].'-'.$date[1].'-'.$date[0];
+        }
+    }
+
+    public function dateOutToString($safe = false){
+        if(($this->date_out === '1970-01-01 00:00:00' || $this->date_out === '' || $this->date_out === null) && $safe){
+            return '-';
+        }else if($this->date_out === '1970-01-01 00:00:00' || $this->date_out === ''){
+            return '';
+        }else{
+            $timestamp  = explode(' ', $this->date_out);
+            $date       = explode('-', $timestamp[0]);
+            return $date[2].'-'.$date[1].'-'.$date[0];
+        }
+    }
+
+    public function dateCommitmentToString($safe = false){
+        if(($this->date_commitment === '1970-01-01 00:00:00' || $this->date_commitment === '' || $this->date_commitment === null) && $safe){
+            return '-';
+        }else if($this->date_commitment === '1970-01-01 00:00:00' || $this->date_commitment === ''){
+            return '';
+        }else{
+            $timestamp  = explode(' ', $this->date_commitment);
+            $date       = explode('-', $timestamp[0]);
+            return $date[2].'-'.$date[1].'-'.$date[0];
+        }
+    }
 }

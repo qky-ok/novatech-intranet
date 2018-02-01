@@ -12,7 +12,7 @@ class Family extends Model{
      */
     public function parent()
     {
-        return $this->belongsTo(self::class, 'id_parent');
+        return $this->hasOne('App\Family', 'id', 'id_parent')->first();
     }
 
     /**

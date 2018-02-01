@@ -12,6 +12,6 @@ class InsuranceCompany extends Model{
      */
     public function warranties()
     {
-        return $this->belongsToMany('App\Service', 'warranties', 'id_insurance_companies');
+        return $this->belongsToMany('App\Warranty', 'warranties', 'id_insurance_companies');
     }
 }

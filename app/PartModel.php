@@ -10,9 +10,9 @@ class PartModel extends Model{
     /**
      * Get the Part for the Model.
      */
-    public function part()
+    public function parts()
     {
-        return $this->belongsToMany('App\Part');
+        return $this->belongsToMany('App\Part', 'model_part', 'model_id', 'part_id');
     }
 
     /**

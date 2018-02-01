@@ -18,10 +18,12 @@
         <table class="table table-bordered table-striped table-hover" id="services-data-table">
             <thead>
             <tr>
-                <th>Id</th>
-                <th>Título</th>
+                <th>N° Ord. compra</th>
                 <th>Estado</th>
                 <th>CAS</th>
+                <th>Fecha entrada</th>
+                <th>Fecha compromiso</th>
+                <th>Fecha salida</th>
                 <th>Historial</th>
                 <th>Creado</th>
                 @can('edit_services', 'delete_services')
@@ -32,10 +34,12 @@
             <tbody>
             @foreach($result as $item)
                 <tr>
-                    <td>{{ $item->id }}</td>
-                    <td>{{ $item->title }}</td>
+                    <td>{{ $item->purchase_order_num }}</td>
                     <td>{{ $item->state()->name }}</td>
                     <td>{{ $item->cas()->name }}</td>
+                    <td>{{ $item->dateInToString(true) }}</td>
+                    <td>{{ $item->dateCommitmentToString(true) }}</td>
+                    <td>{{ $item->dateOutToString(true) }}</td>
                     <td class="text-center">
                         {!! Form::open( ['method' => 'post', 'url' => route('services.history'), 'style' => 'display: inline']) !!}
                             {!! Form::text('id', $item->id, ['class' => 'hidden']) !!}

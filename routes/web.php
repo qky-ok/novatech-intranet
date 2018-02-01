@@ -65,4 +65,128 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/history', ['as' => 'services.history', 'uses' => 'ServiceController@getHistory']);
         Route::post('/destroy', ['as' => 'services.destroy', 'uses' => 'ServiceController@destroy']);
     });
+
+    Route::group(['prefix' => 'crud'], function() {
+        Route::get('/', ['as' => 'crud.index', 'uses' => 'CrudController@index']);
+    });
+
+    Route::group(['prefix' => 'clients'], function() {
+        Route::get('/', ['as' => 'clients.index', 'uses' => 'ClientController@index']);
+        Route::get('/show', ['as' => 'clients.show', 'uses' => 'ClientController@show']);
+        Route::get('/create', ['as' => 'clients.create', 'uses' => 'ClientController@create']);
+        Route::post('/store', ['as' => 'clients.store', 'uses' => 'ClientController@store']);
+        Route::get('/edit', ['as' => 'clients.edit', 'uses' => 'ClientController@edit']);
+        Route::post('/update', ['as' => 'clients.update', 'uses' => 'ClientController@update']);
+        Route::post('/destroy', ['as' => 'clients.destroy', 'uses' => 'ClientController@destroy']);
+    });
+
+    Route::group(['prefix' => 'parts'], function() {
+        Route::get('/', ['as' => 'parts.index', 'uses' => 'PartController@index']);
+        Route::get('/show', ['as' => 'parts.show', 'uses' => 'PartController@show']);
+        Route::get('/create', ['as' => 'parts.create', 'uses' => 'PartController@create']);
+        Route::post('/store', ['as' => 'parts.store', 'uses' => 'PartController@store']);
+        Route::get('/edit', ['as' => 'parts.edit', 'uses' => 'PartController@edit']);
+        Route::post('/update', ['as' => 'parts.update', 'uses' => 'PartController@update']);
+        Route::post('/destroy', ['as' => 'parts.destroy', 'uses' => 'PartController@destroy']);
+    });
+
+    Route::group(['prefix' => 'part_models'], function() {
+        Route::get('/', ['as' => 'part_models.index', 'uses' => 'PartModelController@index']);
+        Route::get('/show', ['as' => 'part_models.show', 'uses' => 'PartModelController@show']);
+        Route::get('/create', ['as' => 'part_models.create', 'uses' => 'PartModelController@create']);
+        Route::post('/store', ['as' => 'part_models.store', 'uses' => 'PartModelController@store']);
+        Route::get('/edit', ['as' => 'part_models.edit', 'uses' => 'PartModelController@edit']);
+        Route::post('/update', ['as' => 'part_models.update', 'uses' => 'PartModelController@update']);
+        Route::post('/destroy', ['as' => 'part_models.destroy', 'uses' => 'PartModelController@destroy']);
+    });
+
+    Route::group(['prefix' => 'brands'], function() {
+        Route::get('/', ['as' => 'brands.index', 'uses' => 'BrandController@index']);
+        Route::get('/show', ['as' => 'brands.show', 'uses' => 'BrandController@show']);
+        Route::get('/create', ['as' => 'brands.create', 'uses' => 'BrandController@create']);
+        Route::post('/store', ['as' => 'brands.store', 'uses' => 'BrandController@store']);
+        Route::get('/edit', ['as' => 'brands.edit', 'uses' => 'BrandController@edit']);
+        Route::post('/update', ['as' => 'brands.update', 'uses' => 'BrandController@update']);
+        Route::post('/destroy', ['as' => 'brands.destroy', 'uses' => 'BrandController@destroy']);
+    });
+
+    Route::group(['prefix' => 'warranties'], function() {
+        Route::get('/', ['as' => 'warranties.index', 'uses' => 'WarrantyController@index']);
+        Route::get('/show', ['as' => 'warranties.show', 'uses' => 'WarrantyController@show']);
+        Route::get('/create', ['as' => 'warranties.create', 'uses' => 'WarrantyController@create']);
+        Route::post('/store', ['as' => 'warranties.store', 'uses' => 'WarrantyController@store']);
+        Route::get('/edit', ['as' => 'warranties.edit', 'uses' => 'WarrantyController@edit']);
+        Route::post('/update', ['as' => 'warranties.update', 'uses' => 'WarrantyController@update']);
+        Route::post('/destroy', ['as' => 'warranties.destroy', 'uses' => 'WarrantyController@destroy']);
+    });
+
+    Route::group(['prefix' => 'application_items'], function() {
+        Route::get('/', ['as' => 'application_items.index', 'uses' => 'ApplicationItemController@index']);
+        Route::get('/show', ['as' => 'application_items.show', 'uses' => 'ApplicationItemController@show']);
+        Route::get('/create', ['as' => 'application_items.create', 'uses' => 'ApplicationItemController@create']);
+        Route::post('/store', ['as' => 'application_items.store', 'uses' => 'ApplicationItemController@store']);
+        Route::get('/edit', ['as' => 'application_items.edit', 'uses' => 'ApplicationItemController@edit']);
+        Route::post('/update', ['as' => 'application_items.update', 'uses' => 'ApplicationItemController@update']);
+        Route::post('/destroy', ['as' => 'application_items.destroy', 'uses' => 'ApplicationItemController@destroy']);
+    });
+
+    Route::group(['prefix' => 'families'], function() {
+        Route::get('/', ['as' => 'families.index', 'uses' => 'FamilyController@index']);
+        Route::get('/show', ['as' => 'families.show', 'uses' => 'FamilyController@show']);
+        Route::get('/create', ['as' => 'families.create', 'uses' => 'FamilyController@create']);
+        Route::post('/store', ['as' => 'families.store', 'uses' => 'FamilyController@store']);
+        Route::get('/edit', ['as' => 'families.edit', 'uses' => 'FamilyController@edit']);
+        Route::post('/update', ['as' => 'families.update', 'uses' => 'FamilyController@update']);
+        Route::post('/destroy', ['as' => 'families.destroy', 'uses' => 'FamilyController@destroy']);
+    });
+
+    Route::group(['prefix' => 'categories'], function() {
+        Route::get('/', ['as' => 'categories.index', 'uses' => 'CategoryController@index']);
+        Route::get('/show', ['as' => 'categories.show', 'uses' => 'CategoryController@show']);
+        Route::get('/create', ['as' => 'categories.create', 'uses' => 'CategoryController@create']);
+        Route::post('/store', ['as' => 'categories.store', 'uses' => 'CategoryController@store']);
+        Route::get('/edit', ['as' => 'categories.edit', 'uses' => 'CategoryController@edit']);
+        Route::post('/update', ['as' => 'categories.update', 'uses' => 'CategoryController@update']);
+        Route::post('/destroy', ['as' => 'categories.destroy', 'uses' => 'CategoryController@destroy']);
+    });
+
+    Route::group(['prefix' => 'selling_houses'], function() {
+        Route::get('/', ['as' => 'selling_houses.index', 'uses' => 'SellingHouseController@index']);
+        Route::get('/show', ['as' => 'selling_houses.show', 'uses' => 'SellingHouseController@show']);
+        Route::get('/create', ['as' => 'selling_houses.create', 'uses' => 'SellingHouseController@create']);
+        Route::post('/store', ['as' => 'selling_houses.store', 'uses' => 'SellingHouseController@store']);
+        Route::get('/edit', ['as' => 'selling_houses.edit', 'uses' => 'SellingHouseController@edit']);
+        Route::post('/update', ['as' => 'selling_houses.update', 'uses' => 'SellingHouseController@update']);
+        Route::post('/destroy', ['as' => 'selling_houses.destroy', 'uses' => 'SellingHouseController@destroy']);
+    });
+
+    Route::group(['prefix' => 'warranty_types'], function() {
+        Route::get('/', ['as' => 'warranty_types.index', 'uses' => 'WarrantyTypeController@index']);
+        Route::get('/show', ['as' => 'warranty_types.show', 'uses' => 'WarrantyTypeController@show']);
+        Route::get('/create', ['as' => 'warranty_types.create', 'uses' => 'WarrantyTypeController@create']);
+        Route::post('/store', ['as' => 'warranty_types.store', 'uses' => 'WarrantyTypeController@store']);
+        Route::get('/edit', ['as' => 'warranty_types.edit', 'uses' => 'WarrantyTypeController@edit']);
+        Route::post('/update', ['as' => 'warranty_types.update', 'uses' => 'WarrantyTypeController@update']);
+        Route::post('/destroy', ['as' => 'warranty_types.destroy', 'uses' => 'WarrantyTypeController@destroy']);
+    });
+
+    Route::group(['prefix' => 'insurance_companies'], function() {
+        Route::get('/', ['as' => 'insurance_companies.index', 'uses' => 'InsuranceCompanyController@index']);
+        Route::get('/show', ['as' => 'insurance_companies.show', 'uses' => 'InsuranceCompanyController@show']);
+        Route::get('/create', ['as' => 'insurance_companies.create', 'uses' => 'InsuranceCompanyController@create']);
+        Route::post('/store', ['as' => 'insurance_companies.store', 'uses' => 'InsuranceCompanyController@store']);
+        Route::get('/edit', ['as' => 'insurance_companies.edit', 'uses' => 'InsuranceCompanyController@edit']);
+        Route::post('/update', ['as' => 'insurance_companies.update', 'uses' => 'InsuranceCompanyController@update']);
+        Route::post('/destroy', ['as' => 'insurance_companies.destroy', 'uses' => 'InsuranceCompanyController@destroy']);
+    });
+
+    Route::group(['prefix' => 'providers'], function() {
+        Route::get('/', ['as' => 'providers.index', 'uses' => 'ProviderController@index']);
+        Route::get('/show', ['as' => 'providers.show', 'uses' => 'ProviderController@show']);
+        Route::get('/create', ['as' => 'providers.create', 'uses' => 'ProviderController@create']);
+        Route::post('/store', ['as' => 'providers.store', 'uses' => 'ProviderController@store']);
+        Route::get('/edit', ['as' => 'providers.edit', 'uses' => 'ProviderController@edit']);
+        Route::post('/update', ['as' => 'providers.update', 'uses' => 'ProviderController@update']);
+        Route::post('/destroy', ['as' => 'providers.destroy', 'uses' => 'ProviderController@destroy']);
+    });
 });

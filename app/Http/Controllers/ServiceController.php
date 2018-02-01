@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Authorizable;
+use App\Brand;
+use App\Category;
+use App\Client;
+use App\PartModel;
+use App\SellingHouse;
 use App\Service;
 use App\ServiceHistory;
 use App\State;
 use App\User;
 use App\Role;
 use App\Mail\ServiceStateChanged;
+use App\Warranty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -20,8 +26,6 @@ class ServiceController extends Controller
 
     function __construct(){
         parent::__construct();
-
-        Controller::addJsFooter('/js/service.js');
     }
 
     /**
@@ -32,6 +36,7 @@ class ServiceController extends Controller
     public function index(){
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
+        Controller::addJsFooter('/js/service.js');
 
         $role = Auth::user()->roles->first()->id;
         if($role == env('CAS_USER')){
@@ -50,15 +55,26 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        $states     = State::pluck('name', 'id');
-        $users      = User::all(['name', 'id']);
-        $cas_users  = [];
+        Controller::addCss('/css/bootstrap-datetimepicker-build.css');
+        Controller::addJsFooter('/js/moment_js/moment.js');
+        Controller::addJsFooter('/js/bootstrap-datetimepicker.js');
+        Controller::addJsFooter('/js/service.js');
+
+        $states         = State::pluck('name', 'id');
+        $users          = User::all(['name', 'id']);
+        $cas_users      = [];
+        $clients        = Client::all(['company', 'id']);
+        $categories     = Category::all(['category', 'id']);
+        $brands         = Brand::all(['brand', 'id']);
+        $models         = PartModel::all(['part_model', 'id']);
+        $selling_houses = SellingHouse::all(['business_name', 'id']);
+        $warranties     = Warranty::all(['num_warranty', 'id']);
 
         foreach($users as $user){
             if($user->getUserRoleId() == env('CAS_USER')) $cas_users[] = $user;
         }
 
-        return view('service.new', compact(['states', 'cas_users']));
+        return view('service.new', compact(['states', 'cas_users', 'clients', 'categories', 'brands', 'models', 'selling_houses', 'warranties']));
     }
 
     /**
@@ -70,17 +86,57 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'id_state'      => 'required|min:1',
-            'id_user'       => 'required|min:1',
-            'title'         => 'required|min:5',
-            'description'   => 'required|min:10'
+            'id_state'              => 'required|min:1',
+            'id_user'               => 'required|min:1',
+            'purchase_order_num'    => 'required|min:1'
         ]);
 
-        $service                = new Service();
-        $service->id_state      = $request->get('id_state');
-        $service->id_user       = $request->get('id_user');
-        $service->title         = $request->get('title');
-        $service->description   = $request->get('description');
+        $service                                = new Service();
+        $service->id_state                      = $request->get('id_state');
+        $service->id_user                       = $request->get('id_user');
+        $service->id_client                     = $request->get('id_client');
+        $service->id_category                   = $request->get('id_category');
+        $service->id_brand                      = $request->get('id_brand');
+        $service->id_model                      = $request->get('id_model');
+        $service->id_selling_house              = $request->get('id_selling_house');
+        $service->id_warranty                   = $request->get('id_warranty');
+        $service->purchase_order_num            = $request->get('purchase_order_num');
+        $service->serial_chasis                 = $request->get('serial_chasis');
+
+        $date_in                                = $request->get('date_in');
+        if(!empty($date_in)){
+            $date_in            = explode('-', $date_in);
+            $service->date_in   = $date_in[2].'-'.$date_in[1].'-'.$date_in[0].' 00:00:00';
+        }else{
+            $service->date_in = '1970-01-01 00:00:00';
+        }
+
+        $date_out                               = $request->get('date_out');
+        if(!empty($date_out)){
+            $date_out           = explode('-', $date_out);
+            $service->date_out  = $date_out[2].'-'.$date_out[1].'-'.$date_out[0].' 00:00:00';
+        }else{
+            $service->date_out = '1970-01-01 00:00:00';
+        }
+
+        $date_commitment                        = $request->get('date_commitment');
+        if(!empty($date_commitment)){
+            $date_commitment            = explode('-', $date_commitment);
+            $service->date_commitment   = $date_commitment[2].'-'.$date_commitment[1].'-'.$date_commitment[0].' 00:00:00';
+        }else{
+            $service->date_commitment = '1970-01-01 00:00:00';
+        }
+
+        $service->defect_according_to_client    = $request->get('defect_according_to_client');
+        $service->equipment_type                = $request->get('equipment_type');
+        $service->location                      = $request->get('location');
+        $service->home_service                  = $request->get('home_service');
+        $service->stock_repair                  = $request->get('stock_repair');
+        $service->corrective_maintenance        = $request->get('corrective_maintenance');
+        $service->pre_aproved_budget            = $request->get('pre_aproved_budget');
+        $service->recolection_service           = $request->get('recolection_service');
+        $service->preventive_maintenance        = $request->get('preventive_maintenance');
+        $service->notes                         = $request->get('notes');
         $service->save();
 
         $serviceHistory                 = new ServiceHistory();
@@ -117,7 +173,7 @@ class ServiceController extends Controller
      */
     public function search(String $search){
         $search     = filter_var($search, FILTER_SANITIZE_STRING);
-        $service    = Service::where('title', $search)->first();
+        $service    = Service::where('purchase_order_num', $search)->first();
         $return     = ['error' => 'not found'];
         $status     = 404;
 
@@ -145,10 +201,10 @@ class ServiceController extends Controller
 
             if($state_name != ''){
                 $return = [
-                    'id'            => $service->id,
-                    'title'         => $service->title,
-                    'description'   => $service->description,
-                    'state'         => $state_name,
+                    'id'                    => $service->id,
+                    'purchase_order_num'    => $service->purchase_order_num,
+                    'date_in'               => $service->dateInToString(true),
+                    'state'                 => $state_name,
                 ];
 
                 $status = 200;
@@ -188,17 +244,28 @@ class ServiceController extends Controller
             'id' => 'required|min:1'
         ]);
 
-        $id_service = $request->get('id');
-        $service    = Service::findOrFail($id_service);
-        $states     = State::pluck('name', 'id');
-        $users      = User::all(['name', 'id']);
-        $cas_users  = [];
+        Controller::addCss('/css/bootstrap-datetimepicker-build.css');
+        Controller::addJsFooter('/js/moment_js/moment.js');
+        Controller::addJsFooter('/js/bootstrap-datetimepicker.js');
+        Controller::addJsFooter('/js/service.js');
+
+        $id_service     = $request->get('id');
+        $service        = Service::findOrFail($id_service);
+        $states         = State::pluck('name', 'id');
+        $users          = User::all(['name', 'id']);
+        $cas_users      = [];
+        $clients        = Client::all(['company', 'id']);
+        $categories     = Category::all(['category', 'id']);
+        $brands         = Brand::all(['brand', 'id']);
+        $models         = PartModel::all(['part_model', 'id']);
+        $selling_houses = SellingHouse::all(['business_name', 'id']);
+        $warranties     = Warranty::all(['num_warranty', 'id']);
 
         foreach($users as $user){
             if($user->getUserRoleId() == env('CAS_USER')) $cas_users[] = $user;
         }
 
-        return view('service.edit', compact(['service', 'states', 'cas_users']));
+        return view('service.edit', compact(['service', 'states', 'cas_users', 'clients', 'categories', 'brands', 'models', 'selling_houses', 'warranties']));
     }
 
     /**
@@ -210,44 +277,121 @@ class ServiceController extends Controller
     public function update(Request $request)
     {
         $this->validate($request, [
-            'id'            => 'required|min:1',
-            'id_state'      => 'required|min:1',
-            'id_user'       => 'required|min:1',
-            'title'         => 'required|min:5',
-            'description'   => 'required|min:10'
+            'id'                    => 'required|min:1',
+            'id_state'              => 'required|min:1',
+            'id_user'               => 'required|min:1',
+            'purchase_order_num'    => 'required|min:1'
         ]);
 
         $user = Auth::user();
         if($user->hasRole('Admin') || $user->hasRole('Call') || $user->hasRole('CAS')) {
-            $edited_fields          = [];
-            $id_service             = $request->get('id');
-            $service                = Service::findOrFail($id_service);
+            $edited_fields                          = [];
+            $id_service                             = $request->get('id');
+            $service                                = Service::findOrFail($id_service);
 
-            $old_id_state           = $service->id_state;
-            $old_id_user            = $service->id_user;
-            $old_title              = $service->title;
-            $old_description        = $service->description;
+            $old_id_state                           = $service->id_state;
+            $old_id_user                            = $service->id_user;
+            $old_id_client                          = $service->id_client;
+            $old_id_category                        = $service->id_category;
+            $old_id_brand                           = $service->id_brand;
+            $old_id_model                           = $service->id_model;
+            $old_id_selling_house                   = $service->id_selling_house;
+            $old_id_warranty                        = $service->id_warranty;
+            $old_purchase_order_num                 = $service->purchase_order_num;
+            $old_serial_chasis                      = $service->serial_chasis;
+            $old_date_in                            = $service->date_in;
+            $old_date_out                           = $service->date_out;
+            $old_date_commitment                    = $service->date_commitment;
+            $old_defect_according_to_client         = $service->defect_according_to_client;
+            $old_equipment_type                     = $service->equipment_type;
+            $old_location                           = $service->location;
+            $old_home_service                       = $service->home_service;
+            $old_stock_repair                       = $service->stock_repair;
+            $old_corrective_maintenance             = $service->corrective_maintenance;
+            $old_pre_aproved_budget                 = $service->pre_aproved_budget;
+            $old_recolection_service                = $service->recolection_service;
+            $old_preventive_maintenance             = $service->preventive_maintenance;
+            $old_notes                              = $service->notes;
 
-            $service->id_state      = $request->get('id_state');
-            $service->id_user       = $request->get('id_user');
-            $service->title         = $request->get('title');
-            $service->description   = $request->get('description');
+            $service->id_state                      = $request->get('id_state');
+            $service->id_user                       = $request->get('id_user');
+            $service->id_client                     = $request->get('id_client');
+            $service->id_category                   = $request->get('id_category');
+            $service->id_brand                      = $request->get('id_brand');
+            $service->id_model                      = $request->get('id_model');
+            $service->id_selling_house              = $request->get('id_selling_house');
+            $service->id_warranty                   = $request->get('id_warranty');
+            $service->purchase_order_num            = $request->get('purchase_order_num');
+            $service->serial_chasis                 = $request->get('serial_chasis');
+
+            $date_in                                = $request->get('date_in');
+            if(!empty($date_in)){
+                $date_in            = explode('-', $date_in);
+                $service->date_in   = $date_in[2].'-'.$date_in[1].'-'.$date_in[0].' 00:00:00';
+            }else{
+                $service->date_in = '1970-01-01 00:00:00';
+            }
+
+            $date_out                               = $request->get('date_out');
+            if(!empty($date_out)){
+                $date_out           = explode('-', $date_out);
+                $service->date_out  = $date_out[2].'-'.$date_out[1].'-'.$date_out[0].' 00:00:00';
+            }else{
+                $service->date_out = '1970-01-01 00:00:00';
+            }
+
+            $date_commitment                        = $request->get('date_commitment');
+            if(!empty($date_commitment)){
+                $date_commitment            = explode('-', $date_commitment);
+                $service->date_commitment   = $date_commitment[2].'-'.$date_commitment[1].'-'.$date_commitment[0].' 00:00:00';
+            }else{
+                $service->date_commitment = '1970-01-01 00:00:00';
+            }
+
+            $service->defect_according_to_client    = $request->get('defect_according_to_client');
+            $service->equipment_type                = $request->get('equipment_type');
+            $service->location                      = $request->get('location');
+            $service->home_service                  = $request->get('home_service');
+            $service->stock_repair                  = $request->get('stock_repair');
+            $service->corrective_maintenance        = $request->get('corrective_maintenance');
+            $service->pre_aproved_budget            = $request->get('pre_aproved_budget');
+            $service->recolection_service           = $request->get('recolection_service');
+            $service->preventive_maintenance        = $request->get('preventive_maintenance');
+            $service->notes                         = $request->get('notes');
             $service->save();
 
-            if($service->id_user != $old_id_user)           $edited_fields[]    = 'usuario';
-            if($service->title != $old_title)               $edited_fields[]    = 'título';
-            if($service->description != $old_description)   $edited_fields[]    = 'descripción';
+            if($service->id_user                    != $old_id_user)                    $edited_fields[]    = 'usuario';
+            if($service->id_client                  != $old_id_client)                  $edited_fields[]    = 'cliente';
+            if($service->id_category                != $old_id_category)                $edited_fields[]    = 'categoría';
+            if($service->id_brand                   != $old_id_brand)                   $edited_fields[]    = 'marca';
+            if($service->id_model                   != $old_id_model)                   $edited_fields[]    = 'modelo';
+            if($service->id_selling_house           != $old_id_selling_house)           $edited_fields[]    = 'casa vendedora';
+            if($service->id_warranty                != $old_id_warranty)                $edited_fields[]    = 'garantía';
+            if($service->purchase_order_num         != $old_purchase_order_num)         $edited_fields[]    = 'número de orden de compra';
+            if($service->serial_chasis              != $old_serial_chasis)              $edited_fields[]    = 'chasis-serial';
+            if($service->date_in                    != $old_date_in)                    $edited_fields[]    = 'fecha entrada';
+            if($service->date_out                   != $old_date_out)                   $edited_fields[]    = 'fecha salida';
+            if($service->date_commitment            != $old_date_commitment)            $edited_fields[]    = 'fecha compromiso';
+            if($service->defect_according_to_client != $old_defect_according_to_client) $edited_fields[]    = 'defecto según cliente';
+            if($service->equipment_type             != $old_equipment_type)             $edited_fields[]    = 'tipo de equipo';
+            if($service->location                   != $old_location)                   $edited_fields[]    = 'ubicación';
+            if($service->home_service               != $old_home_service)               $edited_fields[]    = 'servicio a domicilio';
+            if($service->stock_repair               != $old_stock_repair)               $edited_fields[]    = 'reparación de stock';
+            if($service->corrective_maintenance     != $old_corrective_maintenance)     $edited_fields[]    = 'mantenimiento correctivo';
+            if($service->pre_aproved_budget         != $old_pre_aproved_budget)         $edited_fields[]    = 'presupuesto pre aprobado';
+            if($service->recolection_service        != $old_recolection_service)        $edited_fields[]    = 'servicio de recolección';
+            if($service->preventive_maintenance     != $old_preventive_maintenance)     $edited_fields[]    = 'mantenimiento preventivo';
+            if($service->notes                      != $old_notes)                      $edited_fields[]    = 'notas';
 
-            $serviceHistory                 = new ServiceHistory();
-            $new_state                      = ($service->id_state != $old_id_state) ? $service->id_state : null;
-            $serviceHistory->id_service     = $id_service;
-            $serviceHistory->id_user        = $user->id;
-            $serviceHistory->id_state       = $new_state;
-            $serviceHistory->edited_fields  = (!empty($edited_fields)) ? implode('|', $edited_fields) : null;
+            $serviceHistory                         = new ServiceHistory();
+            $new_state                              = ($service->id_state != $old_id_state) ? $service->id_state : null;
+            $serviceHistory->id_service             = $id_service;
+            $serviceHistory->id_user                = $user->id;
+            $serviceHistory->id_state               = $new_state;
+            $serviceHistory->edited_fields          = (!empty($edited_fields)) ? implode('|', $edited_fields) : null;
             $serviceHistory->save();
 
-            //ToDo Acá y en Store, mandar mail a roles suscriptos
-            //Send email if state was change and there are subscribers
+            //Send email if state was changed and there are subscribers
             if($new_state != null) $this->sendEmail($service);
 
             flash()->success('El Service ha sido actualizado.');

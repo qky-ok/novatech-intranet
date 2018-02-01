@@ -15,7 +15,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            {!! Form::open(['route' => ['services.store'] ]) !!}
+            {!! Form::open(['route' => ['services.store'], 'class' => 'service-form']) !!}
                 @include('service._form')
                 <!-- Submit Form Button -->
                 {!! Form::submit('Create', ['class' => 'btn btn-primary']) !!}

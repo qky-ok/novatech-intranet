@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 class ApplicationItem extends Model{
-    protected $table = 'application_item';
+    protected $table = 'application_items';
 
     /**
      * Get the Parts for the Application Item.

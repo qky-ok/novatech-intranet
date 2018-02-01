@@ -26,9 +26,9 @@ class Part extends Model{
     /**
      * Get the Models for the Part.
      */
-    public function model()
+    public function models()
     {
-        return $this->belongsToMany('App\PartModel');
+        return $this->belongsToMany('App\PartModel', 'model_part', 'part_id', 'model_id');
     }
 
     /**
@@ -52,7 +52,7 @@ class Part extends Model{
      */
     public function replacement()
     {
-        return $this->belongsTo(self::class, 'id_replacement_part');
+        return $this->belongsTo('App\Part', 'id_replacement_part')->first();
     }
 
     /**

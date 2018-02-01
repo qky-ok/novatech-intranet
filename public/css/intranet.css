@@ -140,3 +140,43 @@ table td p {
   background-color: #efeeee;
   display: inline-block;
 }
+.crud-menu a {
+  display: block;
+  margin-bottom: 10px;
+  width: 220px;
+}
+.service-form {
+  margin: 0 0 40px;
+}
+.service-form .form-group input[type='checkbox'] {
+  margin: 4px 0 0 4px;
+}
+.client-form {
+  margin: 0 0 40px;
+}
+.client-form .form-group .sex-label {
+  display: block;
+}
+.client-form .form-group .sex-label-f {
+  margin: 0 0 0 10px;
+}
+.client-form .form-group.address input {
+  margin: 0 0 10px 0;
+}
+.client-form .form-group input[type='checkbox'],
+.client-form .form-group input[type='radio'] {
+  margin: 4px 0 0 4px;
+}
+.warranty-form {
+  margin: 0 0 40px;
+}
+.warranty-form .form-group input[type='checkbox'],
+.warranty-form .form-group input[type='radio'] {
+  margin: 4px 0 0 4px;
+}
+.part-form {
+  margin: 0 0 40px;
+}
+.part-form .form-group input[type='checkbox'] {
+  margin: 4px 0 0 4px;
+}

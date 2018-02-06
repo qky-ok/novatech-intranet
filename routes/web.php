@@ -88,6 +88,8 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('/edit', ['as' => 'parts.edit', 'uses' => 'PartController@edit']);
         Route::post('/update', ['as' => 'parts.update', 'uses' => 'PartController@update']);
         Route::post('/destroy', ['as' => 'parts.destroy', 'uses' => 'PartController@destroy']);
+        Route::post('/file-upload', ['as' => 'parts.file_upload', 'uses' => 'PartController@uploadImage']);
+        Route::post('/file-delete', ['as' => 'parts.file_delete', 'uses' => 'PartController@deleteImage']);
     });
 
     Route::group(['prefix' => 'part_models'], function() {

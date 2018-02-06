@@ -55,6 +55,11 @@ return [
             'visibility' => 'public',
         ],
 
+        'part_images' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/part_images',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_KEY'),

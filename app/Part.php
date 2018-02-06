@@ -62,4 +62,12 @@ class Part extends Model{
     {
         return $this->hasOne('App\Provider', 'id', 'id_provider')->first();
     }
+
+    /**
+     * Get the PartImages for the Part.
+     */
+    public function images()
+    {
+        return $this->hasMany('App\PartImage', 'id_part')->get();
+    }
 }

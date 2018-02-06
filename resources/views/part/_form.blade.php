@@ -130,3 +130,33 @@
     {!! Form::checkbox('scrap', 1, (isset($part->scrap) && $part->scrap === 1) ? true : false) !!}
     @if ($errors->has('scrap')) <p class="help-block">{{ $errors->first('scrap') }}</p> @endif
 </div>
+
+@if(isset($part) && !$part->images()->isEmpty())
+    <!-- Image Delete -->
+    <div class="form-group images-container-group @if ($errors->has('image_delete')) has-error @endif">
+        {!! Form::label('image_delete', 'Borrar Imágenes') !!}
+        <div class="images-container">
+            @foreach($part->images() as $image)
+                <div class="img-container">
+                    <span class="img-title">{{ $image->file_name }}</span>
+                    <div class="img">
+                        <img class="img-btn" src="/part_images/{{ $image->file_name }}">
+                    </div>
+                    <a id="remove_{{ $image->id }}" data-file-name="{{ $image->file_name }}" class="btn cms-btn-delete btn-small btn-danger img-delete part-image-delete">X</a>
+                </div>
+            @endforeach
+        </div>
+        @if ($errors->has('image_delete')) <p class="help-block">{{ $errors->first('image_delete') }}</p> @endif
+    </div>
+@endif
+
+<!-- Image Upload -->
+<div class="form-group image-upload-container @if ($errors->has('image_upload')) has-error @endif">
+    {!! Form::label('image_upload', 'Subir Imágenes') !!}
+
+    <div id="dropzone" class="dropzone dropzone-image-row">
+        <div class="dz-message" data-dz-message>Arrastre o haga click para subir imagenes aquí</div>
+    </div>
+
+    @if ($errors->has('image_upload')) <p class="help-block">{{ $errors->first('image_upload') }}</p> @endif
+</div>

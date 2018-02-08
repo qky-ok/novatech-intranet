@@ -25,16 +25,23 @@
 </div>
 
 <!-- Models -->
-<div class="form-group @if ($errors->has('id_model')) has-error @endif">
-    {!! Form::label('id_model', 'Modelo') !!}
-    <select class="form-control" name="id_model">
-        <option value="0">Seleccione un Modelo</option>
+<div class="form-group @if ($errors->has('part_models')) has-error @endif">
+    {!! Form::label('part_models', 'Modelo') !!}
+    <select multiple="multiple" class="form-control" name="part_models[]">
+        <option value="0">Seleccione Modelos (ctrl + click)</option>
         @foreach($models as $model)
-            <option value="{{ $model->id }}" @if(isset($part->id_model) && $part->id_model == $model->id) selected="selected" @endif>{{ $model->part_model }}</option>
+            @php $selected = false @endphp
+            @if(isset($part) && !empty($part->models()))
+                @foreach($part->models() as $part_model)
+                    {{ ($part_model->id_model === $model->id) ? $selected = true : '' }}
+                @endforeach
+            @endif
+
+            <option value="{{ $model->id }}" @if($selected) selected="selected" @endif>{{ $model->part_model }}</option>
         @endforeach
     </select>
 
-    @if ($errors->has('id_model')) <p class="help-block">{{ $errors->first('id_model') }}</p> @endif
+    @if ($errors->has('part_models')) <p class="help-block">{{ $errors->first('part_models') }}</p> @endif
 </div>
 
 <!-- Family -->
@@ -63,17 +70,24 @@
     @if ($errors->has('id_sub_family')) <p class="help-block">{{ $errors->first('id_sub_family') }}</p> @endif
 </div>
 
-<!-- Replacement Part -->
-<div class="form-group @if ($errors->has('id_replacement_part')) has-error @endif">
-    {!! Form::label('id_replacement_part', 'Parte de reemplazo') !!}
-    <select class="form-control" name="id_replacement_part">
-        <option value="0">Seleccione una Parte de reemplazo</option>
+<!-- Replacement Parts -->
+<div class="form-group @if ($errors->has('part_parts')) has-error @endif">
+    {!! Form::label('part_parts', 'Parte de reemplazo') !!}
+    <select multiple="multiple" class="form-control" name="part_parts[]">
+        <option value="0">Seleccione Partes de Reemplazo (ctrl + click)</option>
         @foreach($parts as $replacement_part)
-            <option value="{{ $replacement_part->id }}" @if(isset($part->id_replacement_part) && $part->id_replacement_part == $replacement_part->id) selected="selected" @endif>{{ $replacement_part->description }}</option>
+            @php $selected = false @endphp
+            @if(isset($part) && !empty($part->replacement_parts()))
+                @foreach($part->replacement_parts() as $part_part)
+                    {{ ($part_part->id_replacement_part === $replacement_part->id) ? $selected = true : '' }}
+                @endforeach
+            @endif
+
+            <option value="{{ $replacement_part->id }}" @if($selected) selected="selected" @endif>{{ $replacement_part->description }}</option>
         @endforeach
     </select>
 
-    @if ($errors->has('id_replacement_part')) <p class="help-block">{{ $errors->first('id_replacement_part') }}</p> @endif
+    @if ($errors->has('part_parts')) <p class="help-block">{{ $errors->first('part_parts') }}</p> @endif
 </div>
 
 <!-- Provider -->

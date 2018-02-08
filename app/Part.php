@@ -24,14 +24,6 @@ class Part extends Model{
     }
 
     /**
-     * Get the Models for the Part.
-     */
-    public function models()
-    {
-        return $this->belongsToMany('App\PartModel', 'model_part', 'part_id', 'model_id');
-    }
-
-    /**
      * Get the Family for the Part.
      */
     public function family()
@@ -48,19 +40,27 @@ class Part extends Model{
     }
 
     /**
-     * Get the Replacement for the Part.
-     */
-    public function replacement()
-    {
-        return $this->belongsTo('App\Part', 'id_replacement_part')->first();
-    }
-
-    /**
      * Get the Provider for the Part.
      */
     public function provider()
     {
         return $this->hasOne('App\Provider', 'id', 'id_provider')->first();
+    }
+
+    /**
+     * Get the Replacements for the Part.
+     */
+    public function replacement_parts()
+    {
+        return $this->hasMany('App\PartPart', 'id_part')->get();
+    }
+
+    /**
+     * Get the Models for the Part.
+     */
+    public function models()
+    {
+        return $this->hasMany('App\ModelPart', 'id_part')->get();
     }
 
     /**

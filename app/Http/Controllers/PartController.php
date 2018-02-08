@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Part;
+use App\PartPart;
+use App\ModelPart;
 use App\PartImage;
 use App\ApplicationItem;
 use App\Brand;
@@ -75,10 +77,8 @@ class PartController extends Controller
             $part                       = new Part();
             $part->id_application_item  = $request->get('id_application_item');
             $part->id_brand             = $request->get('id_brand');
-            $part->id_model             = $request->get('id_model');
             $part->id_family            = $request->get('id_family');
             $part->id_sub_family        = $request->get('id_sub_family');
-            $part->id_replacement_part  = $request->get('id_replacement_part');
             $part->id_provider          = $request->get('id_provider');
             $part->num_part             = $request->get('num_part');
             $part->description          = $request->get('description');
@@ -87,6 +87,28 @@ class PartController extends Controller
             $part->discontinuous        = $request->get('discontinuous');
             $part->scrap                = $request->get('scrap');
             $part->save();
+
+            if(!empty($request->get('part_parts'))){
+                foreach($request->get('part_parts') as $id_replacement_part){
+                    if($id_replacement_part){
+                        $part_parts                         = new PartPart;
+                        $part_parts->id_part                = $part->id;
+                        $part_parts->id_replacement_part    = $id_replacement_part;
+                        $part_parts->save();
+                    }
+                }
+            }
+
+            if(!empty($request->get('part_models'))){
+                foreach($request->get('part_models') as $id_model){
+                    if($id_model){
+                        $models_parts           = new ModelPart;
+                        $models_parts->id_part  = $part->id;
+                        $models_parts->id_model = $id_model;
+                        $models_parts->save();
+                    }
+                }
+            }
 
             if(!empty($request->get('part_images'))){
                 foreach($request->get('part_images') as $part_image_file_name){
@@ -154,10 +176,8 @@ class PartController extends Controller
             $part                       = Part::findOrFail($id_part);
             $part->id_application_item  = $request->get('id_application_item');
             $part->id_brand             = $request->get('id_brand');
-            $part->id_model             = $request->get('id_model');
             $part->id_family            = $request->get('id_family');
             $part->id_sub_family        = $request->get('id_sub_family');
-            $part->id_replacement_part  = $request->get('id_replacement_part');
             $part->id_provider          = $request->get('id_provider');
             $part->num_part             = $request->get('num_part');
             $part->description          = $request->get('description');
@@ -166,6 +186,32 @@ class PartController extends Controller
             $part->discontinuous        = $request->get('discontinuous');
             $part->scrap                = $request->get('scrap');
             $part->save();
+
+            $resetPartsParts = PartPart::where('id_part', $id_part)->delete();
+
+            if(!empty($request->get('part_parts'))){
+                foreach($request->get('part_parts') as $id_replacement_part){
+                    if($id_replacement_part){
+                        $part_parts                         = new PartPart;
+                        $part_parts->id_part                = $id_part;
+                        $part_parts->id_replacement_part    = $id_replacement_part;
+                        $part_parts->save();
+                    }
+                }
+            }
+
+            $resetModelsParts = ModelPart::where('id_part', $id_part)->delete();
+
+            if(!empty($request->get('part_models'))){
+                foreach($request->get('part_models') as $id_model){
+                    if($id_model){
+                        $models_parts           = new ModelPart;
+                        $models_parts->id_part  = $id_part;
+                        $models_parts->id_model = $id_model;
+                        $models_parts->save();
+                    }
+                }
+            }
 
             if(!empty($request->get('part_images'))){
                 foreach($request->get('part_images') as $part_image_file_name){

@@ -130,6 +130,9 @@ class ServiceController extends Controller
         $service->defect_according_to_client    = $request->get('defect_according_to_client');
         $service->equipment_type                = $request->get('equipment_type');
         $service->location                      = $request->get('location');
+        $service->warranty                      = $request->get('warranty');
+        $service->stock_reposition_doa          = $request->get('stock_reposition_doa');
+        $service->pending_budget                = $request->get('pending_budget');
         $service->home_service                  = $request->get('home_service');
         $service->stock_repair                  = $request->get('stock_repair');
         $service->corrective_maintenance        = $request->get('corrective_maintenance');
@@ -149,7 +152,7 @@ class ServiceController extends Controller
         //Send email if there are subscribers
         $this->sendEmail($service);
 
-        flash('El Service ha sido creado.');
+        flash('El Ticket ha sido creado.');
 
         return redirect()->route('services.index');
     }
@@ -172,8 +175,8 @@ class ServiceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function search(String $search){
-        $search     = filter_var($search, FILTER_SANITIZE_STRING);
-        $service    = Service::where('purchase_order_num', $search)->first();
+        $search     = filter_var($search, FILTER_SANITIZE_NUMBER_INT);
+        $service    = Service::where('id', $search)->first();
         $return     = ['error' => 'not found'];
         $status     = 404;
 
@@ -201,9 +204,9 @@ class ServiceController extends Controller
 
             if($state_name != ''){
                 $return = [
-                    'purchase_order_num'    => $service->purchase_order_num,
-                    'date_in'               => $service->dateInToString(true),
-                    'state'                 => $state_name,
+                    'id'        => $service->id,
+                    'date_in'   => $service->dateInToString(true),
+                    'state'     => $state_name,
                 ];
 
                 $status = 200;
@@ -304,6 +307,9 @@ class ServiceController extends Controller
             $old_defect_according_to_client         = $service->defect_according_to_client;
             $old_equipment_type                     = $service->equipment_type;
             $old_location                           = $service->location;
+            $old_warranty                           = $service->warranty;
+            $old_stock_reposition_doa               = $service->stock_reposition_doa;
+            $old_pending_budget                     = $service->pending_budget;
             $old_home_service                       = $service->home_service;
             $old_stock_repair                       = $service->stock_repair;
             $old_corrective_maintenance             = $service->corrective_maintenance;
@@ -350,6 +356,9 @@ class ServiceController extends Controller
             $service->defect_according_to_client    = $request->get('defect_according_to_client');
             $service->equipment_type                = $request->get('equipment_type');
             $service->location                      = $request->get('location');
+            $service->warranty                      = $request->get('warranty');
+            $service->stock_reposition_doa          = $request->get('stock_reposition_doa');
+            $service->pending_budget                = $request->get('pending_budget');
             $service->home_service                  = $request->get('home_service');
             $service->stock_repair                  = $request->get('stock_repair');
             $service->corrective_maintenance        = $request->get('corrective_maintenance');
@@ -374,6 +383,9 @@ class ServiceController extends Controller
             if($service->defect_according_to_client != $old_defect_according_to_client) $edited_fields[]    = 'defecto según cliente';
             if($service->equipment_type             != $old_equipment_type)             $edited_fields[]    = 'tipo de equipo';
             if($service->location                   != $old_location)                   $edited_fields[]    = 'ubicación';
+            if($service->warranty                   != $old_warranty)                   $edited_fields[]    = 'garantía';
+            if($service->stock_reposition_doa       != $old_stock_reposition_doa)       $edited_fields[]    = 'reposición de stock (DOA)';
+            if($service->pending_budget             != $old_pending_budget)             $edited_fields[]    = 'a presupuestar';
             if($service->home_service               != $old_home_service)               $edited_fields[]    = 'servicio a domicilio';
             if($service->stock_repair               != $old_stock_repair)               $edited_fields[]    = 'reparación de stock';
             if($service->corrective_maintenance     != $old_corrective_maintenance)     $edited_fields[]    = 'mantenimiento correctivo';
@@ -393,7 +405,7 @@ class ServiceController extends Controller
             //Send email if state was changed and there are subscribers
             if($new_state != null) $this->sendEmail($service);
 
-            flash()->success('El Service ha sido actualizado.');
+            flash()->success('El Ticket ha sido actualizado.');
         }else{
 
         }
@@ -423,7 +435,7 @@ class ServiceController extends Controller
 
         $service->delete();
 
-        flash()->success('El Service ha sido borrado.');
+        flash()->success('El Ticket ha sido borrado.');
 
         return redirect()->route('services.index');
     }

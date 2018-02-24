@@ -31,7 +31,7 @@
                         <div class="col-md-3">
                             <div class="checkbox">
                                 <label class="{{ str_contains($perm->name, 'delete') ? 'text-danger' : '' }}">
-                                    {!! Form::checkbox("permissions[]", $perm->name, $per_found, isset($options) ? $options : []) !!} {{ $perm->name }}
+                                    {!! Form::checkbox("permissions[]", $perm->name, $per_found, isset($options) ? $options : []) !!} {{ str_replace('service', 'ticket', $perm->name) }}
                                 </label>
                             </div>
                         </div>

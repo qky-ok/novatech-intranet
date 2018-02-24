@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Services')
+@section('title', 'Tickets')
 
 @section('content')
     <div class="row">
         <div class="col-md-5">
-            <h3 class="modal-title">{{ $result->total() }} {{ str_plural('Service', $result->count()) }} </h3>
+            <h3 class="modal-title">{{ $result->total() }} {{ str_plural('Ticket', $result->count()) }} </h3>
         </div>
         <div class="col-md-7 page-action text-right">
             @can('add_services')
@@ -18,9 +18,10 @@
         <table class="table table-bordered table-striped table-hover" id="services-data-table">
             <thead>
             <tr>
-                <th>N° Ord. compra</th>
+                <th>ID</th>
                 <th>Estado</th>
                 <th>CAS</th>
+                <th>Cliente</th>
                 <th>Fecha entrada</th>
                 <th>Fecha compromiso</th>
                 <th>Fecha salida</th>
@@ -34,9 +35,10 @@
             <tbody>
             @foreach($result as $item)
                 <tr>
-                    <td>{{ $item->purchase_order_num }}</td>
-                    <td>{{ $item->state()->name }}</td>
-                    <td>{{ $item->cas()->name }}</td>
+                    <td>{{ $item->id }}</td>
+                    <td>{{ (!empty($item->state()->name)) ? $item->state()->name : ' - ' }}</td>
+                    <td>{{ (!empty($item->cas()->name)) ? $item->cas()->name : ' - ' }}</td>
+                    <td>{{ (!empty($item->client()->business_name)) ? $item->client()->business_name : ' - ' }}</td>
                     <td>{{ $item->dateInToString(true) }}</td>
                     <td>{{ $item->dateCommitmentToString(true) }}</td>
                     <td>{{ $item->dateOutToString(true) }}</td>

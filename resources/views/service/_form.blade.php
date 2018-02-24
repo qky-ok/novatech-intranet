@@ -1,7 +1,7 @@
 <!-- States Form Input -->
 <div class="form-group @if ($errors->has('id_state')) has-error @endif">
     {!! Form::label('id_state', 'Estado') !!}
-    {!! Form::select('id_state', $states, isset($service) ? $service->id_state : null,  ['class' => 'form-control']) !!}
+    {!! Form::select('id_state', $states, isset($service) ? $service->id_state : 6,  ['class' => 'form-control']) !!}
     @if ($errors->has('id_state')) <p class="help-block">{{ $errors->first('id_state') }}</p> @endif
 </div>
 
@@ -11,7 +11,7 @@
     <select class="form-control" name="id_user">
         <option value="0">Seleccione CAS</option>
         @foreach($cas_users as $cas_user)
-            <option value="{{ $cas_user->id }}" @if(isset($service->id_user) && $service->id_user == $cas_user->id) selected="selected" @endif>{{ $cas_user->name }}</option>
+            <option value="{{ $cas_user->id }}" @if(isset($service->id_user) && $service->id_user == $cas_user->id) selected="selected" @elseif(Auth::user()->roles->first()->id == env('CAS_USER') && $cas_user->id == Auth::user()->id) selected="selected" @endif>{{ $cas_user->name }}</option>
         @endforeach
     </select>
 
@@ -161,6 +161,27 @@
     {!! Form::label('location', 'Ubicación') !!}
     {!! Form::text('location', (isset($service->location)) ? $service->location : null, ['class' => 'form-control', 'placeholder' => 'Ubicación']) !!}
     @if ($errors->has('location')) <p class="help-block">{{ $errors->first('location') }}</p> @endif
+</div>
+
+<!-- Warranty of Service Form Input -->
+<div class="form-group @if ($errors->has('warranty')) has-error @endif">
+    {!! Form::label('warranty', 'Garantía') !!}
+    {!! Form::checkbox('warranty', 1, (isset($service->warranty) && $service->warranty === 1) ? true : false) !!}
+    @if ($errors->has('warranty')) <p class="help-block">{{ $errors->first('warranty') }}</p> @endif
+</div>
+
+<!-- Stock Reposition DOA of Service Form Input -->
+<div class="form-group @if ($errors->has('stock_reposition_doa')) has-error @endif">
+    {!! Form::label('stock_reposition_doa', 'Resposición de stock (DOA)') !!}
+    {!! Form::checkbox('stock_reposition_doa', 1, (isset($service->stock_reposition_doa) && $service->stock_reposition_doa === 1) ? true : false) !!}
+    @if ($errors->has('stock_reposition_doa')) <p class="help-block">{{ $errors->first('stock_reposition_doa') }}</p> @endif
+</div>
+
+<!-- Pending Budget of Service Form Input -->
+<div class="form-group @if ($errors->has('pending_budget')) has-error @endif">
+    {!! Form::label('pending_budget', 'A Presupuestar') !!}
+    {!! Form::checkbox('pending_budget', 1, (isset($service->pending_budget) && $service->pending_budget === 1) ? true : false) !!}
+    @if ($errors->has('pending_budget')) <p class="help-block">{{ $errors->first('pending_budget') }}</p> @endif
 </div>
 
 <!-- Home service of Service Form Input -->

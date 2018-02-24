@@ -61,7 +61,7 @@
                         @if(Auth::check())
                             @can('view_services')
                                 <li class="{{ Request::is('services*') ? 'active' : '' }}">
-                                    <a href="{{ route('services.index') }}">Services</a>
+                                    <a href="{{ route('services.index') }}">Tickets</a>
                                 </li>
                             @endcan
                         @endif

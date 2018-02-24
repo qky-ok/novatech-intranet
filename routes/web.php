@@ -82,7 +82,7 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::group(['prefix' => 'parts'], function() {
         Route::get('/', ['as' => 'parts.index', 'uses' => 'PartController@index']);
-        Route::get('/show', ['as' => 'parts.show', 'uses' => 'PartController@show']);
+        Route::get('/show/{id}', ['as' => 'parts.show', 'uses' => 'PartController@show']);
         Route::get('/create', ['as' => 'parts.create', 'uses' => 'PartController@create']);
         Route::post('/store', ['as' => 'parts.store', 'uses' => 'PartController@store']);
         Route::get('/edit', ['as' => 'parts.edit', 'uses' => 'PartController@edit']);

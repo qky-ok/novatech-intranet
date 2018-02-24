@@ -31,7 +31,7 @@ $(document).ready(function(){
                 success     : function(response){
                     if(!response.hasOwnProperty('error')){
                         var htmlData =
-                            '<tr><td>'  + response.purchase_order_num +
+                            '<tr><td>'  + response.id +
                             '</td><td>' + response.date_in +
                             '</td><td>' + response.state +
                             '</td></tr>';

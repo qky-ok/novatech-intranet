@@ -37,6 +37,24 @@ class PartController extends Controller
     }
 
     /**
+     * Show a resource.
+     *
+     * @param  Int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id){
+        Controller::addCss('/css/colorbox/colorbox.css');
+        Controller::addJsFooter('/js/colorbox/jquery.colorbox-min.js');
+        Controller::addJsFooter('/js/part_show.js');
+
+        $part   = Part::findOrFail($id);
+        $models = PartModel::all(['part_model', 'id']);
+        $parts  = Part::all(['description', 'id']);
+
+        return view('part.show', compact('part', 'models', 'parts'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

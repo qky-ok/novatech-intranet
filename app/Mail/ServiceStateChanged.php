@@ -11,8 +11,8 @@ use Illuminate\Queue\SerializesModels;
 class ServiceStateChanged extends Mailable{
     use Queueable, SerializesModels;
 
-    protected $service;
-    protected $state;
+    public $service;
+    public $state;
 
     /**
      * Create a new message instance.
@@ -30,13 +30,18 @@ class ServiceStateChanged extends Mailable{
      * @return $this
      */
     public function build(){
+        $service    = Service::findOrFail($this->service->id);
+        $cas        = (!empty($service->cas()))     ? $service->cas()->name             : ' - ';
+        $client     = (!empty($service->client()))  ? $service->client()->business_name : ' - ';
+
         return  $this->view('emails.serviceStateChanged')
+                ->from(env('MAIL_FROM_ADDRESS'))
                 ->subject('Service - Cambio de Estado')
                 ->with([
-                    'serviceId'             => $this->service->id,
-                    'serviceState'          => $this->state->name,
-                    'serviceTitle'          => $this->service->title,
-                    'serviceDescription'    => $this->service->description
+                    'serviceId'     => $service->id,
+                    'serviceState'  => $this->state->name,
+                    'serviceCas'    => $cas,
+                    'serviceClient' => $client
                 ]);
     }
 }

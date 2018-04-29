@@ -45,10 +45,64 @@
             @endforeach
             </tbody>
         </table>
-
-        <div class="text-center">
-            {{ $result->links() }}
-        </div>
     </div>
 
+    @push('scripts')
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('#data-table').DataTable({
+                    responsive  : true,
+                    order       : [1, 'desc'],
+                    dom         : 'Bfrtip',
+                    buttons     : [
+                        {
+                            extend          : 'copyHtml5',
+                            title           : 'Novatech - Estados',
+                            exportOptions   : {
+                                columns: [ 0, 1, 2 ]
+                            }
+                        },
+                        {
+                            extend          : 'excelHtml5',
+                            title           : 'Novatech - Estados',
+                            exportOptions   : {
+                                columns: [ 0, 1, 2 ]
+                            }
+                        },
+                        {
+                            extend          : 'print',
+                            title           : 'Novatech - Estados',
+                            exportOptions   : {
+                                columns: [ 0, 1, 2 ]
+                            }
+                        }
+                    ],
+                    language:{
+                        "sProcessing":     "Procesando...",
+                        "sLengthMenu":     "Mostrar _MENU_ registros",
+                        "sZeroRecords":    "No se encontraron resultados",
+                        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix":    "",
+                        "sSearch":         "Buscar:",
+                        "sUrl":            "",
+                        "sInfoThousands":  ",",
+                        "sLoadingRecords": "Cargando...",
+                        "oPaginate": {
+                            "sFirst":    "Primero",
+                            "sLast":     "Último",
+                            "sNext":     "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        }
+                    }
+                });
+            });
+        </script>
+    @endpush
 @endsection

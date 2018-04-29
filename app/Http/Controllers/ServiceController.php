@@ -448,8 +448,19 @@ class ServiceController extends Controller
                 foreach($state_sends_email as $state_sends_email_row){
                     if($role = Role::findOrFail($state_sends_email_row->pivot->role_id)){
                         if($role->default_email != null){
-                            Mail::to($role->default_email)->send(new ServiceStateChanged($service, $state));
-                            $role_names[] = $role->name;
+                            $result         = Mail::to($role->default_email)->queue(new ServiceStateChanged($service, $state));
+
+                            /*$result         = Mail::send('emails.serviceStateChanged.blade', $data, function($message){
+                                $message->from('noreply@mydomain.com', 'My Website');
+                                $message->to($role->default_email)->subject(env(''));
+                            });*/
+
+
+                            /*$fail           = Mail::failures();
+                            if(!empty($fail)) throw new \Exception('Could not send message to '.$fail[0]);
+                            if(empty($result)) throw new \Exception('Email could not be sent.');*/
+
+                            $role_names[]   = $role->name;
                         }
                     }
                 }

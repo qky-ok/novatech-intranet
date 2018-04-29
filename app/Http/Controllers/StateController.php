@@ -16,6 +16,9 @@ class StateController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
+        Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
+        Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
+
         $result = State::latest()->paginate();
         return view('state.index', compact('result'));
     }

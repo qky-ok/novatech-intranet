@@ -149,6 +149,26 @@
     @if ($errors->has('send_services_amount')) <p class="help-block">{{ $errors->first('send_services_amount') }}</p> @endif
 </div>
 
+<!-- States Input -->
+<div class="form-group @if ($errors->has('client_services_states')) has-error @endif">
+    {!! Form::label('client_services_states', 'Roles') !!}
+    <select multiple="multiple" class="form-control" name="client_services_states[]">
+        <option value="0">Seleccione Estados para alertar al Cliente (ctrl + click)</option>
+        @foreach($states as $state)
+            @php $selected = false @endphp
+            @if(isset($state) && !empty($client_services_states))
+                @foreach($client_services_states as $client_service_state)
+                    {{ ($client_service_state->id === $state->id) ? $selected = true : '' }}
+                @endforeach
+            @endif
+
+            <option value="{{ $state->id }}" @if($selected) selected="selected" @endif>{{ $state->name }}</option>
+        @endforeach
+    </select>
+
+    @if ($errors->has('client_services_states')) <p class="help-block">{{ $errors->first('client_services_states') }}</p> @endif
+</div>
+
 @push('scripts')
     <script type="text/javascript">
         $(document).ready(function(){

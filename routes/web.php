@@ -66,6 +66,13 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/destroy', ['as' => 'services.destroy', 'uses' => 'ServiceController@destroy']);
     });
 
+    Route::group(['prefix' => 'service_alarms'], function() {
+        Route::get('/', ['as' => 'service_alarm.index', 'uses' => 'ServiceAlarmController@index']);
+        Route::get('/edit', ['as' => 'service_alarm.edit', 'uses' => 'ServiceAlarmController@edit']);
+        Route::post('/update', ['as' => 'service_alarm.update', 'uses' => 'ServiceAlarmController@update']);
+        Route::get('/check-services', ['as' => 'service_alarm.check_services', 'uses' => 'ServiceAlarmController@checkServices']);
+    });
+
     Route::group(['prefix' => 'crud'], function() {
         Route::get('/', ['as' => 'crud.index', 'uses' => 'CrudController@index']);
     });

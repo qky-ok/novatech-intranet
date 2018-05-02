@@ -114,4 +114,24 @@ class Service extends Model{
             return $date[2].'-'.$date[1].'-'.$date[0];
         }
     }
+
+    public function alarmCheck(){
+        $has_alarm = (object) [];
+
+        if(($this->date_commitment !== '1970-01-01 00:00:00' && $this->date_commitment !== '') && ($this->date_out === '1970-01-01 00:00:00' || $this->date_out === '')){
+            $alarms             = ServiceAlarm::all();
+            $commitment_date    = date_create($this->date_commitment);
+            $today 	            = date_create();
+            $diff  	            = date_diff($today, $commitment_date);
+
+            if(!empty($alarms)){
+                foreach($alarms as $alarm){
+                    $alarm_days = $alarm->alarm_days;
+                    if($diff->days <= $alarm_days) $has_alarm = (object) ['name' => $alarm->alarm_name, 'days' => $diff->days];
+                }
+            }
+        }
+
+        return $has_alarm;
+    }
 }

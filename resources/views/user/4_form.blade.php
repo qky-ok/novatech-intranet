@@ -56,6 +56,18 @@
     {!! Form::text('website', (isset($extendedData->website)) ? $extendedData->website : null, ['class' => 'form-control', 'placeholder' => 'Website']) !!}
     @if ($errors->has('website')) <p class="help-block">{{ $errors->first('website') }}</p> @endif
 </div>
+<!-- Latitude -->
+<div class="form-group @if ($errors->has('latitude')) has-error @endif">
+    {!! Form::label('latitude', 'Latitud') !!}
+    {!! Form::text('latitude', (isset($extendedData->latitude)) ? $extendedData->latitude : null, ['class' => 'form-control', 'placeholder' => 'Latitud']) !!}
+    @if ($errors->has('latitude')) <p class="help-block">{{ $errors->first('latitude') }}</p> @endif
+</div>
+<!-- Longitude -->
+<div class="form-group @if ($errors->has('longitude')) has-error @endif">
+    {!! Form::label('longitude', 'Longitud') !!}
+    {!! Form::text('longitude', (isset($extendedData->longitude)) ? $extendedData->longitude : null, ['class' => 'form-control', 'placeholder' => 'Longitud']) !!}
+    @if ($errors->has('longitude')) <p class="help-block">{{ $errors->first('longitude') }}</p> @endif
+</div>
 <!-- Contact Email -->
 <div class="form-group @if ($errors->has('contact_email')) has-error @endif">
     {!! Form::label('contact_email', 'Email de contacto') !!}

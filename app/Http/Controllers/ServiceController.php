@@ -92,6 +92,7 @@ class ServiceController extends Controller
         ]);
 
         $service                                = new Service();
+        $service->ticket_number                 = $request->get('ticket_number');
         $service->id_state                      = $request->get('id_state');
         $service->id_user                       = $request->get('id_user');
         $service->id_client                     = $request->get('id_client');
@@ -142,6 +143,11 @@ class ServiceController extends Controller
         $service->notes                         = $request->get('notes');
         $service->save();
 
+        if(empty($service->ticket_number)){
+            $service->ticket_number = $service->id;
+            $service->save();
+        }
+
         $serviceHistory                 = new ServiceHistory();
         $serviceHistory->id_service     = $service->id;
         $serviceHistory->id_user        = Auth::user()->id;
@@ -170,8 +176,6 @@ class ServiceController extends Controller
 
     /**
      * Search a specified resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function search(String $search){
@@ -427,45 +431,65 @@ class ServiceController extends Controller
         $id = $request->get('id');
         $me = Auth::user();
 
-        if( $me->hasRole('Admin') ) {
+        if($me->hasRole('Admin') || $me->can('delete_services')){
             $service = Service::findOrFail($id);
-        } else {
-            $service = $me->services()->findOrFail($id);
+            $service->delete();
+
+            flash()->success('El Ticket ha sido borrado.');
+        }else{
+            flash()->error('El Ticket no pudo ser borrado (el usuario no tiene permisos).');
         }
-
-        $service->delete();
-
-        flash()->success('El Ticket ha sido borrado.');
 
         return redirect()->route('services.index');
     }
 
     private function sendEmail(Service $service){
+        $mails  = [];
+        $client = $service->client();
+        $cas    = $service->cas();
+
+        if(!empty($client)){
+            $client_states = $client->states();
+
+            if(!empty($client_states)){
+                foreach($client_states as $client_state){
+                    if($client_state->id == $service->id_state) $mails[] = $client->email;
+                }
+            }
+        }
+
+        if(!empty($cas)){
+            $mails[] = $cas->email;
+        }
+
         if($state = State::findOrFail($service->id_state)){
             $state_sends_email = $state->sendsMail()->get();
             if(!empty($state_sends_email)){
-                $role_names = [];
                 foreach($state_sends_email as $state_sends_email_row){
                     if($role = Role::findOrFail($state_sends_email_row->pivot->role_id)){
-                        if($role->default_email != null){
-                            $result         = Mail::to($role->default_email)->queue(new ServiceStateChanged($service, $state));
 
-                            /*$result         = Mail::send('emails.serviceStateChanged.blade', $data, function($message){
-                                $message->from('noreply@mydomain.com', 'My Website');
-                                $message->to($role->default_email)->subject(env(''));
-                            });*/
+                        if($role->id === 1 || $role->id === 3 || $role->id === 5 || $role->id === 6){
+                            $role_users = $role->role_users();
 
-
-                            /*$fail           = Mail::failures();
-                            if(!empty($fail)) throw new \Exception('Could not send message to '.$fail[0]);
-                            if(empty($result)) throw new \Exception('Email could not be sent.');*/
-
-                            $role_names[]   = $role->name;
+                            if(!empty($role_users)){
+                                foreach($role_users as $role_user){
+                                    $mails[] = $role_user->email;
+                                }
+                            }
                         }
                     }
                 }
-                if(!empty($role_names)) flash()->success('Se envió un mail a los siguientes suscriptores: '.implode(', ', $role_names));
             }
+        }
+
+        if(!empty($mails)){
+            foreach($mails as $mail){
+                $result = Mail::to($mail)->queue(new ServiceStateChanged($service, $state));
+            }
+
+            flash()->success('Se envió un mail a los siguientes suscriptores: '.implode(', ', $mails));
+        }else{
+            flash()->info('No se encontraron suscriptores');
         }
     }
 }

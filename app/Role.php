@@ -5,6 +5,22 @@ namespace App;
 class Role extends \Spatie\Permission\Models\Role
 {
     /**
+     * Get the Users associated with this Role
+     */
+    public function role_users(){
+        $pivot_ids  = ModelHasRole::where('role_id', $this->id)->get();
+        $users      = [];
+
+        if(!$pivot_ids->isEmpty()){
+            foreach($pivot_ids as $pivot_id){
+                $users[] = User::findOrFail($pivot_id->model_id);
+            }
+        }
+
+        return $users;
+    }
+
+    /**
      * Get the States that this Role can see
      */
     public function viewStates(){

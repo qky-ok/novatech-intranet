@@ -1,3 +1,10 @@
+<!-- Ticket Number Input -->
+<div class="form-group @if ($errors->has('ticket_number')) has-error @endif">
+    {!! Form::label('ticket_number', 'N° de Ticket') !!}
+    {!! Form::text('ticket_number', (!empty($service->ticket_number)) ? $service->ticket_number : null, ['class' => 'form-control', 'placeholder' => '0000-000000000']) !!}
+    @if ($errors->has('ticket_number')) <p class="help-block">{{ $errors->first('ticket_number') }}</p> @endif
+</div>
+
 <!-- States Form Input -->
 <div class="form-group @if ($errors->has('id_state')) has-error @endif">
     {!! Form::label('id_state', 'Estado') !!}
@@ -8,12 +15,15 @@
 <!-- CAS Users Form Input -->
 <div class="form-group @if ($errors->has('id_user')) has-error @endif">
     {!! Form::label('id_user', 'CAS') !!}
-    <select class="form-control" name="id_user">
+    <select class="form-control" name="id_user" @if(Auth::user()->roles->first()->id == env('CAS_USER')) disabled @endif>
         <option value="0">Seleccione CAS</option>
         @foreach($cas_users as $cas_user)
             <option value="{{ $cas_user->id }}" @if(isset($service->id_user) && $service->id_user == $cas_user->id) selected="selected" @elseif(Auth::user()->roles->first()->id == env('CAS_USER') && $cas_user->id == Auth::user()->id) selected="selected" @endif>{{ $cas_user->name }}</option>
         @endforeach
     </select>
+    @if(Auth::user()->roles->first()->id == env('CAS_USER'))
+        <input type="hidden" name="id_user" value="{{ Auth::user()->id }}">
+    @endif
 
     @if ($errors->has('id_user')) <p class="help-block">{{ $errors->first('id_user') }}</p> @endif
 </div>
@@ -98,8 +108,8 @@
 
 <!-- Purchase Order Number of Service Form Input -->
 <div class="form-group @if ($errors->has('purchase_order_num')) has-error @endif">
-    {!! Form::label('purchase_order_num', 'Número de orden de compra') !!}
-    {!! Form::text('purchase_order_num', (isset($service->purchase_order_num)) ? $service->purchase_order_num : null, ['class' => 'form-control', 'placeholder' => 'Número de orden de compra']) !!}
+    {!! Form::label('purchase_order_num', 'Número de factura de compra') !!}
+    {!! Form::text('purchase_order_num', (isset($service->purchase_order_num)) ? $service->purchase_order_num : null, ['class' => 'form-control', 'placeholder' => 'Número de factura de compra']) !!}
     @if ($errors->has('purchase_order_num')) <p class="help-block">{{ $errors->first('purchase_order_num') }}</p> @endif
 </div>
 

@@ -7,28 +7,28 @@ $(document).ready(function(){
     if(dataTableElem.length){
         dataTableElem.DataTable({
             responsive  : true,
-            order       : [5, 'desc'],
+            order       : [9, 'desc'],
             dom         : 'Bfrtip',
             buttons     : [
                 {
                     extend          : 'copyHtml5',
                     title           : 'Novatech - Services',
                     exportOptions   : {
-                        columns: [ 0, 1, 2, 3, 4, 5 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
                     }
                 },
                 {
                     extend          : 'excelHtml5',
                     title           : 'Novatech - Services',
                     exportOptions   : {
-                        columns: [ 0, 1, 2, 3, 4, 5 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
                     }
                 },
                 {
                     extend          : 'print',
                     title           : 'Novatech - Services',
                     exportOptions   : {
-                        columns: [ 0, 1, 2, 3, 4, 5 ]
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
                     }
                 }
             ],

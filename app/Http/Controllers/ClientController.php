@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Response;
@@ -38,7 +39,9 @@ class ClientController extends Controller
         Controller::addJsFooter('/js/moment_js/moment.js');
         Controller::addJsFooter('/js/bootstrap-datetimepicker.js');
 
-        return view('client.new');
+        $states = State::all();
+
+        return view('client.new', compact('states'));
     }
 
     /**
@@ -81,6 +84,14 @@ class ClientController extends Controller
             $client->website                = $request->get('website');
             $client->blacklist              = $request->get('blacklist', 0);
             $client->send_services_amount   = $request->get('send_services_amount', 0);
+
+            $client_services_states         = [];
+            if(!empty($request->get('client_services_states'))){
+                foreach($request->get('client_services_states') as $id_state){
+                    if($id_state) $client_services_states[] = $id_state;
+                }
+            }
+            $client->client_services_states = implode('|', $client_services_states);
             $client->save();
 
             flash('El Cliente ha sido creado.');
@@ -107,10 +118,12 @@ class ClientController extends Controller
         Controller::addJsFooter('/js/bootstrap-datetimepicker.js');
         Controller::addJsFooter('/js/service.js');
 
-        $id_client  = $request->get('id');
-        $client     = Client::findOrFail($id_client);
+        $id_client              = $request->get('id');
+        $client                 = Client::findOrFail($id_client);
+        $states                 = State::all();
+        $client_services_states = $client->states();
 
-        return view('client.edit', compact(['client']));
+        return view('client.edit', compact(['client', 'states', 'client_services_states']));
     }
 
     /**
@@ -158,6 +171,14 @@ class ClientController extends Controller
             $client->website                = $request->get('website');
             $client->blacklist              = $request->get('blacklist',0);
             $client->send_services_amount   = $request->get('send_services_amount', 0);
+
+            $client_services_states         = [];
+            if(!empty($request->get('client_services_states'))){
+                foreach($request->get('client_services_states') as $id_state){
+                    if($id_state) $client_services_states[] = $id_state;
+                }
+            }
+            $client->client_services_states = implode('|', $client_services_states);
             $client->save();
 
             flash()->success('El Cliente ha sido actualizado.');

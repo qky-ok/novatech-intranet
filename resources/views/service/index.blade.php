@@ -19,12 +19,13 @@
             <thead>
             <tr>
                 <th>ID</th>
+                <th>N° de Ticket</th>
                 <th>Estado</th>
                 <th>CAS</th>
                 <th>Cliente</th>
-                <th>Fecha entrada</th>
-                <th>Fecha compromiso</th>
-                <th>Fecha salida</th>
+                <th>Fechas</th>
+                <th>Datos Cliente</th>
+                <th>Alarma</th>
                 <th>Historial</th>
                 <th>Creado</th>
                 @can('edit_services', 'delete_services')
@@ -34,14 +35,50 @@
             </thead>
             <tbody>
             @foreach($result as $item)
-                <tr>
+                @php
+                    $alert_style = "";
+                    if(isset($item->alarmCheck()->name)){
+                        switch($item->alarmCheck()->name){
+                            case 'Alerta Amarilla':
+                                $alert_style = "background-color: #ffff6e;";
+                            break;
+                            case 'Alerta Naranja':
+                                $alert_style = "background-color: #ffcc70;";
+                            break;
+                            case 'Alerta Roja':
+                                $alert_style = "background-color: #ff9696;";
+                            break;
+                        }
+                    }
+                @endphp
+
+                <tr style="{{ $alert_style }}">
                     <td>{{ $item->id }}</td>
+                    <td>{{ (!empty($item->ticket_number)) ? $item->ticket_number : ' - ' }}</td>
                     <td>{{ (!empty($item->state()->name)) ? $item->state()->name : ' - ' }}</td>
                     <td>{{ (!empty($item->cas()->name)) ? $item->cas()->name : ' - ' }}</td>
                     <td>{{ (!empty($item->client()->business_name)) ? $item->client()->business_name : ' - ' }}</td>
-                    <td>{{ $item->dateInToString(true) }}</td>
-                    <td>{{ $item->dateCommitmentToString(true) }}</td>
-                    <td>{{ $item->dateOutToString(true) }}</td>
+                    <td>
+                        <b>Entrada</b>:
+                        <br/>{{ $item->dateInToString(true) }}<br/>
+                        <b>Compromiso</b>:
+                        <br/>{{ $item->dateCommitmentToString(true) }}<br/>
+                        <b>Salida</b>:
+                        <br/>{{ $item->dateOutToString(true) }}
+                    </td>
+                    <td>
+                        @if($item->id_client > 0)
+                            <b>Dirección</b>:
+                            <br/>{{ $item->client()->address }}<br/>
+                            <b>Teléfono</b>:
+                            <br/>{{ $item->client()->phone_work }}
+                        @endif
+                    </td>
+                    <td>
+                        @if(isset($item->alarmCheck()->name))
+                            {{ $item->alarmCheck()->name.' (faltan '.$item->alarmCheck()->days.' días)' }}
+                        @endif
+                    </td>
                     <td class="text-center">
                         {!! Form::open( ['method' => 'post', 'url' => route('services.history'), 'style' => 'display: inline']) !!}
                             {!! Form::text('id', $item->id, ['class' => 'hidden']) !!}
@@ -52,12 +89,12 @@
                     </td>
                     <td>{{ $item->created_at->format('d/m/Y H:i:s') }}</td>
                     @can('edit_services', 'delete_services')
-                    <td class="text-center">
-                        @include('shared._actions', [
-                            'entity' => 'services',
-                            'id' => $item->id
-                        ])
-                    </td>
+                        <td class="text-center">
+                            @include('shared._actions', [
+                                'entity' => 'services',
+                                'id' => $item->id
+                            ])
+                        </td>
                     @endcan
                 </tr>
             @endforeach

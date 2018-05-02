@@ -22,8 +22,6 @@ class UserController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(){
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
@@ -37,8 +35,6 @@ class UserController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     * @param  Integer  $role_id
-     * @return \Illuminate\Http\Response
      */
     public function create($role_id = 1){
         //$roles = Role::pluck('name', 'id');
@@ -104,6 +100,8 @@ class UserController extends Controller
                     $extendedUser->phone_customers      = (!empty($request->get('phone_customers'))) ? $request->get('phone_customers') : null;
                     $extendedUser->working_hours        = (!empty($request->get('working_hours'))) ? $request->get('working_hours') : null;
                     $extendedUser->website              = (!empty($request->get('website'))) ? $request->get('website') : null;
+                    $extendedUser->latitude             = (!empty($request->get('latitude'))) ? $request->get('latitude') : null;
+                    $extendedUser->longitude            = (!empty($request->get('longitude'))) ? $request->get('longitude') : null;
                     $extendedUser->contact_email        = (!empty($request->get('contact_email'))) ? $request->get('contact_email') : null;
                     $extendedUser->contact_name_1       = (!empty($request->get('contact_name_1'))) ? $request->get('contact_name_1') : null;
                     $extendedUser->contact_email_1      = (!empty($request->get('contact_email_1'))) ? $request->get('contact_email_1') : null;
@@ -162,9 +160,6 @@ class UserController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit(Request $request)
     {
@@ -241,6 +236,8 @@ class UserController extends Controller
                 $extendedUser->phone_customers      = (!empty($request->get('phone_customers'))) ? $request->get('phone_customers') : null;
                 $extendedUser->working_hours        = (!empty($request->get('working_hours'))) ? $request->get('working_hours') : null;
                 $extendedUser->website              = (!empty($request->get('website'))) ? $request->get('website') : null;
+                $extendedUser->latitude             = (!empty($request->get('latitude'))) ? $request->get('latitude') : null;
+                $extendedUser->longitude            = (!empty($request->get('longitude'))) ? $request->get('longitude') : null;
                 $extendedUser->contact_email        = (!empty($request->get('contact_email'))) ? $request->get('contact_email') : null;
                 $extendedUser->contact_name_1       = (!empty($request->get('contact_name_1'))) ? $request->get('contact_name_1') : null;
                 $extendedUser->contact_email_1      = (!empty($request->get('contact_email_1'))) ? $request->get('contact_email_1') : null;

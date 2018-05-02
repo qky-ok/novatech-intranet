@@ -26,4 +26,19 @@ class Client extends Model{
             return $date[2].'-'.$date[1].'-'.$date[0];
         }
     }
+
+    public function states(){
+        $client_services_states = $this->client_services_states;
+        $states                 = [];
+
+        if(!empty($client_services_states)){
+            $client_services_states = (strpos($client_services_states, '|') !== false) ? explode('|', $client_services_states) : [$client_services_states];
+
+            foreach($client_services_states as $client_service_state){
+                $states[] = State::findOrFail($client_service_state);
+            }
+        }
+
+        return $states;
+    }
 }

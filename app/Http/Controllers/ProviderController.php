@@ -22,7 +22,7 @@ class ProviderController extends Controller
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
 
-        $result = Provider::latest()->paginate();
+        $result = Provider::all();
 
         return view('provider.index', compact('result'));
     }

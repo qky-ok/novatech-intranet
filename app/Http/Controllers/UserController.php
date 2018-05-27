@@ -27,7 +27,7 @@ class UserController extends Controller
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
 
-        $result = User::latest()->paginate();
+        $result = User::all();
         $roles  = Role::all();
 
         return view('user.index', compact('result'))->with('roles', $roles);

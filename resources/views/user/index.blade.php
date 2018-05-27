@@ -5,7 +5,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-4">
-            <h3 class="modal-title">{{ $result->total() }} {{ ($result->count() > 1) ? 'Usuarios' : 'Usuario' }} </h3>
+            <h3 class="modal-title">{{ $result->count() }} {{ ($result->count() > 1) ? 'Usuarios' : 'Usuario' }} </h3>
         </div>
         <div class="col-md-8 page-action text-right">
             @can('add_users')

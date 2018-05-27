@@ -23,7 +23,7 @@ class PartModelController extends Controller
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
 
-        $result = PartModel::latest()->paginate();
+        $result = PartModel::all();
 
         return view('part_model.index', compact('result'));
     }

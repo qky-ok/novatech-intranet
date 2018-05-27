@@ -22,7 +22,7 @@ class FamilyController extends Controller
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
 
-        $result = Family::latest()->paginate();
+        $result = Family::all();
 
         return view('family.index', compact('result'));
     }

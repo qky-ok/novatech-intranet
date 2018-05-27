@@ -22,7 +22,7 @@ class WarrantyTypeController extends Controller
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
 
-        $result = WarrantyType::latest()->paginate();
+        $result = WarrantyType::all();
 
         return view('warranty_type.index', compact('result'));
     }

@@ -40,9 +40,9 @@ class ServiceController extends Controller
 
         $role = Auth::user()->roles->first()->id;
         if($role == env('CAS_USER')){
-            $result = Service::where('id_user', Auth::user()->id)->paginate();
+            $result = Service::where('id_user', Auth::user()->id)->get();
         }else{
-            $result = Service::latest()->paginate();
+            $result = Service::all();
         }
 
         return view('service.index', compact('result'));

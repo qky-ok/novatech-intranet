@@ -5,7 +5,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-5">
-            <h3 class="modal-title">{{ count($result) }} Alarmas </h3>
+            <h3 class="modal-title">{{ $result->count() }} Alarmas </h3>
         </div>
     </div>
 

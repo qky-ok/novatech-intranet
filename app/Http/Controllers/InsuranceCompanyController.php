@@ -22,7 +22,7 @@ class InsuranceCompanyController extends Controller
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
 
-        $result = InsuranceCompany::latest()->paginate();
+        $result = InsuranceCompany::all();
 
         return view('insurance_company.index', compact('result'));
     }

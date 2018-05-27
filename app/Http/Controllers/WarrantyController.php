@@ -24,7 +24,7 @@ class WarrantyController extends Controller
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
 
-        $result = Warranty::latest()->paginate();
+        $result = Warranty::all();
 
         return view('warranty.index', compact('result'));
     }

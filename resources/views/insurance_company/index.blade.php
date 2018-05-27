@@ -5,7 +5,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-5">
-            <h3 class="modal-title">{{ $result->total() }} {{ str_plural('Compañía Aseguradora', $result->count()) }} </h3>
+            <h3 class="modal-title">{{ $result->count() }} {{ str_plural('Compañía Aseguradora', $result->count()) }} </h3>
         </div>
         <div class="col-md-7 page-action text-right">
             <a href="{{ route('insurance_companies.create') }}" class="btn btn-primary btn-sm"> <i class="glyphicon glyphicon-plus-sign"></i> Crear</a>

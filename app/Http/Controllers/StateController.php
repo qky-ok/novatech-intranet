@@ -19,7 +19,7 @@ class StateController extends Controller
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
 
-        $result = State::latest()->paginate();
+        $result = State::all();
         return view('state.index', compact('result'));
     }
 

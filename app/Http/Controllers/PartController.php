@@ -104,6 +104,7 @@ class PartController extends Controller
             $part->warranty_months      = $request->get('warranty_months');
             $part->discontinuous        = $request->get('discontinuous');
             $part->scrap                = $request->get('scrap');
+            $part->deposit_stock        = $request->get('deposit_stock');
             $part->save();
 
             if(!empty($request->get('part_parts'))){
@@ -203,6 +204,7 @@ class PartController extends Controller
             $part->warranty_months      = $request->get('warranty_months');
             $part->discontinuous        = $request->get('discontinuous');
             $part->scrap                = $request->get('scrap');
+            $part->deposit_stock        = $request->get('deposit_stock');
             $part->save();
 
             $resetPartsParts = PartPart::where('id_part', $id_part)->delete();

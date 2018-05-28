@@ -16,18 +16,38 @@
         <table class="table table-bordered table-striped table-hover" id="data-table">
             <thead>
             <tr>
-                <th>Id</th>
                 <th>N° Parte</th>
-                <th>Descripción</th>
+                <th>Rubro</th>
+                <th>Marca</th>
+                <th>Modelos</th>
+                <th>Familia</th>
+                <th>Sub Familia</th>
+                <th>Stock Depósito</th>
                 <th class="text-center">Acciones</th>
             </tr>
             </thead>
             <tbody>
             @foreach($result as $item)
                 <tr>
-                    <td>{{ $item->id }}</td>
                     <td>{{ $item->num_part }}</td>
-                    <td>{{ $item->description }}</td>
+                    <td>@if(!empty($item->application_item())) {{ $item->application_item()->application_item }} @else - @endif</td>
+                    <td>@if(!empty($item->brand())) {{ $item->brand()->brand }} @else - @endif</td>
+                    <td>
+                        @if(!empty($item->models()))
+                            @foreach($item->models() as $model)
+                                @if(!empty($model->model()))
+                                    - {{ $model->model()->part_model }}<br/>
+                                @else
+                                    -<br/>
+                                @endif
+                            @endforeach
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>@if(!empty($item->family())) {{ $item->family()->family }} @else - @endif</td>
+                    <td>@if(!empty($item->sub_family())) {{ $item->sub_family()->family }} @else - @endif</td>
+                    <td>{{ $item->deposit_stock }}</td>
                     <td class="text-center">
                         @include('shared._actions', [
                             'entity'    => 'parts',
@@ -52,21 +72,21 @@
                             extend          : 'copyHtml5',
                             title           : 'Novatech - Parte',
                             exportOptions   : {
-                                columns: [ 0, 1 ]
+                                columns: [ 0, 1, 2, 3, 4, 5, 6 ]
                             }
                         },
                         {
                             extend          : 'excelHtml5',
                             title           : 'Novatech - Parte',
                             exportOptions   : {
-                                columns: [ 0, 1 ]
+                                columns: [ 0, 1, 2, 3, 4, 5, 6 ]
                             }
                         },
                         {
                             extend          : 'print',
                             title           : 'Novatech - Parte',
                             exportOptions   : {
-                                columns: [ 0, 1 ]
+                                columns: [ 0, 1, 2, 3, 4, 5, 6 ]
                             }
                         }
                     ],

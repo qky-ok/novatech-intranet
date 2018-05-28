@@ -28,6 +28,33 @@
     @if ($errors->has('id_user')) <p class="help-block">{{ $errors->first('id_user') }}</p> @endif
 </div>
 
+<!--Parts Input -->
+<div class="form-group @if ($errors->has('id_part')) has-error @endif">
+    {!! Form::label('id_part', 'Parte') !!}
+    <select class="form-control" name="id_part">
+        @foreach($parts as $part)
+            <option value="{{ $part->id }}" @if(isset($service->id_part) && $service->id_part == $part->id) selected="selected" @endif>{{ $part->description }}</option>
+        @endforeach
+    </select>
+
+    @if ($errors->has('id_part')) <p class="help-block">{{ $errors->first('id_part') }}</p> @endif
+</div>
+
+@if(isset($service->cas_stock))
+    <!-- CAS Stock Input -->
+    <div class="form-group @if ($errors->has('cas_stock')) has-error @endif">
+        {!! Form::label('cas_stock', 'Stock de Parte') !!}
+        <select class="form-control" name="cas_stock">
+            <option value="1" @if($service->cas_stock == 1) selected="selected" @endif>Pedido</option>
+            <option value="2" @if($service->cas_stock == 2) selected="selected" @endif>En proceso de compra</option>
+            <option value="3" @if($service->cas_stock == 3) selected="selected" @endif>Enviado</option>
+            <option value="4" @if($service->cas_stock == 4) selected="selected" @endif>Devuelto</option>
+        </select>
+
+        @if ($errors->has('cas_stock')) <p class="help-block">{{ $errors->first('cas_stock') }}</p> @endif
+    </div>
+@endif
+
 <!-- Clients Form Input -->
 <div class="form-group @if ($errors->has('id_client')) has-error @endif">
     {!! Form::label('id_client', 'Cliente') !!}
@@ -241,6 +268,13 @@
     {!! Form::label('defect_according_to_client', 'Defecto según el cliente') !!}
     {!! Form::textarea('defect_according_to_client', (isset($service->defect_according_to_client)) ? $service->defect_according_to_client : null, ['class' => 'form-control ckeditor', 'placeholder' => 'Defecto según el cliente...']) !!}
     @if ($errors->has('defect_according_to_client')) <p class="help-block">{{ $errors->first('defect_according_to_client') }}</p> @endif
+</div>
+
+<!-- Work Done Form Input -->
+<div class="form-group @if ($errors->has('work_done')) has-error @endif">
+    {!! Form::label('work_done', 'Trabajo realizado') !!}
+    {!! Form::textarea('work_done', (isset($service->work_done)) ? $service->work_done : null, ['class' => 'form-control ckeditor', 'placeholder' => 'Trabajo realizado...']) !!}
+    @if ($errors->has('work_done')) <p class="help-block">{{ $errors->first('work_done') }}</p> @endif
 </div>
 
 <!-- Notes Form Input -->

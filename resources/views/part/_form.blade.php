@@ -145,6 +145,13 @@
     @if ($errors->has('scrap')) <p class="help-block">{{ $errors->first('scrap') }}</p> @endif
 </div>
 
+<!-- Deposit Stock -->
+<div class="form-group @if ($errors->has('deposit_stock')) has-error @endif">
+    {!! Form::label('deposit_stock', 'Stock Depósito') !!}
+    <input min="0" max="999" name="deposit_stock" type="number" value="{{ (isset($part->deposit_stock)) ? $part->deposit_stock : 0 }}" id="deposit_stock" style="margin: 0 0 0 10px;padding: 0 5px;">
+    @if ($errors->has('deposit_stock')) <p class="help-block">{{ $errors->first('deposit_stock') }}</p> @endif
+</div>
+
 @if(isset($part) && !$part->images()->isEmpty())
     <!-- Image Delete -->
     <div class="form-group images-container-group @if ($errors->has('image_delete')) has-error @endif">

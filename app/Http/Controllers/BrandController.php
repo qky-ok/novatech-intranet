@@ -22,7 +22,7 @@ class BrandController extends Controller
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
 
-        $result = Brand::latest()->paginate();
+        $result = Brand::all();
 
         return view('brand.index', compact('result'));
     }

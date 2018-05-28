@@ -13,15 +13,17 @@ class ServiceStateChanged extends Mailable{
 
     public $service;
     public $state;
+    public $attachment;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Service $service, State $state){
-        $this->service  = $service;
-        $this->state    = $state;
+    public function __construct(Service $service, State $state, $attachment){
+        $this->service      = $service;
+        $this->state        = $state;
+        $this->attachment   = $attachment;
     }
 
     /**
@@ -37,6 +39,7 @@ class ServiceStateChanged extends Mailable{
         return  $this->view('emails.serviceStateChanged')
                 ->from(env('MAIL_FROM_ADDRESS'))
                 ->subject('Service - Cambio de Estado')
+                ->attach($this->attachment)
                 ->with([
                     'serviceId'     => $service->id,
                     'serviceState'  => $this->state->name,

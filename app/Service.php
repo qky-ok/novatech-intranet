@@ -24,6 +24,14 @@ class Service extends Model{
     }
 
     /**
+     * Get the Brand for the Service.
+     */
+    public function part()
+    {
+        return $this->hasOne('App\Part', 'id', 'id_part')->first();
+    }
+
+    /**
      * Get the Warranty for the Service.
      */
     public function warranty()

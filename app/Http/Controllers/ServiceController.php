@@ -6,6 +6,7 @@ use App\Authorizable;
 use App\Brand;
 use App\Category;
 use App\Client;
+use App\Part;
 use App\PartModel;
 use App\SellingHouse;
 use App\Service;
@@ -15,6 +16,7 @@ use App\User;
 use App\Role;
 use App\Mail\ServiceStateChanged;
 use App\Warranty;
+use App\CasServiceStock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -63,6 +65,7 @@ class ServiceController extends Controller
         $states         = State::pluck('name', 'id');
         $users          = User::all(['name', 'id']);
         $cas_users      = [];
+        $parts          = Part::all(['description', 'id']);
         $clients        = Client::all(['company', 'id']);
         $categories     = Category::all(['category', 'id']);
         $brands         = Brand::all(['brand', 'id']);
@@ -74,7 +77,7 @@ class ServiceController extends Controller
             if($user->getUserRoleId() == env('CAS_USER')) $cas_users[] = $user;
         }
 
-        return view('service.new', compact(['states', 'cas_users', 'clients', 'categories', 'brands', 'models', 'selling_houses', 'warranties']));
+        return view('service.new', compact(['states', 'cas_users', 'clients', 'parts', 'categories', 'brands', 'models', 'selling_houses', 'warranties']));
     }
 
     /**
@@ -88,12 +91,14 @@ class ServiceController extends Controller
         $this->validate($request, [
             'id_state'              => 'required|min:1',
             'id_user'               => 'required|min:1',
+            'id_part'               => 'required|min:1',
             'purchase_order_num'    => 'required|min:1'
         ]);
 
         $service                                = new Service();
         $service->ticket_number                 = $request->get('ticket_number');
         $service->id_state                      = $request->get('id_state');
+        $service->id_part                       = $request->get('id_part');
         $service->id_user                       = $request->get('id_user');
         $service->id_client                     = $request->get('id_client');
         $service->id_category                   = $request->get('id_category');
@@ -129,6 +134,7 @@ class ServiceController extends Controller
         }
 
         $service->defect_according_to_client    = $request->get('defect_according_to_client');
+        $service->work_done                     = $request->get('work_done');
         $service->equipment_type                = $request->get('equipment_type');
         $service->location                      = $request->get('location');
         $service->warranty                      = $request->get('warranty');
@@ -141,12 +147,17 @@ class ServiceController extends Controller
         $service->recolection_service           = $request->get('recolection_service');
         $service->preventive_maintenance        = $request->get('preventive_maintenance');
         $service->notes                         = $request->get('notes');
-        $service->save();
 
         if(empty($service->ticket_number)){
             $service->ticket_number = $service->id;
-            $service->save();
         }
+        $service->save();
+
+        $casServiceStock                = new CasServiceStock;
+        $casServiceStock->id_service    = $service->id;
+        $casServiceStock->id_part       = $service->id_part;
+        $casServiceStock->stock         = 0;
+        $casServiceStock->save();
 
         $serviceHistory                 = new ServiceHistory();
         $serviceHistory->id_service     = $service->id;
@@ -261,6 +272,7 @@ class ServiceController extends Controller
         $users          = User::all(['name', 'id']);
         $cas_users      = [];
         $clients        = Client::all(['company', 'id']);
+        $parts          = Part::all(['description', 'id']);
         $categories     = Category::all(['category', 'id']);
         $brands         = Brand::all(['brand', 'id']);
         $models         = PartModel::all(['part_model', 'id']);
@@ -271,7 +283,7 @@ class ServiceController extends Controller
             if($user->getUserRoleId() == env('CAS_USER')) $cas_users[] = $user;
         }
 
-        return view('service.edit', compact(['service', 'states', 'cas_users', 'clients', 'categories', 'brands', 'models', 'selling_houses', 'warranties']));
+        return view('service.edit', compact(['service', 'states', 'cas_users', 'clients', 'parts', 'categories', 'brands', 'models', 'selling_houses', 'warranties']));
     }
 
     /**
@@ -290,12 +302,15 @@ class ServiceController extends Controller
         ]);
 
         $user = Auth::user();
-        if($user->hasRole('Admin') || $user->hasRole('Call') || $user->hasRole('CAS')) {
+        if($user->hasRole('Admin') || $user->hasRole('Call') || $user->hasRole('CAS') || $user->hasRole('Deposito') || $user->hasRole('Compras')) {
             $edited_fields                          = [];
             $id_service                             = $request->get('id');
             $service                                = Service::findOrFail($id_service);
 
+            $old_ticket_number                      = $service->ticket_number;
             $old_id_state                           = $service->id_state;
+            $old_id_part                            = $service->id_part;
+            $old_cas_stock                          = $service->cas_stock;
             $old_id_user                            = $service->id_user;
             $old_id_client                          = $service->id_client;
             $old_id_category                        = $service->id_category;
@@ -309,6 +324,7 @@ class ServiceController extends Controller
             $old_date_out                           = $service->date_out;
             $old_date_commitment                    = $service->date_commitment;
             $old_defect_according_to_client         = $service->defect_according_to_client;
+            $old_work_done                          = $service->work_done;
             $old_equipment_type                     = $service->equipment_type;
             $old_location                           = $service->location;
             $old_warranty                           = $service->warranty;
@@ -322,7 +338,10 @@ class ServiceController extends Controller
             $old_preventive_maintenance             = $service->preventive_maintenance;
             $old_notes                              = $service->notes;
 
+            $service->ticket_number                 = $request->get('ticket_number');
             $service->id_state                      = $request->get('id_state');
+            $service->id_part                       = $request->get('id_part');
+            $service->cas_stock                     = $request->get('cas_stock');
             $service->id_user                       = $request->get('id_user');
             $service->id_client                     = $request->get('id_client');
             $service->id_category                   = $request->get('id_category');
@@ -358,6 +377,7 @@ class ServiceController extends Controller
             }
 
             $service->defect_according_to_client    = $request->get('defect_according_to_client');
+            $service->work_done                     = $request->get('work_done');
             $service->equipment_type                = $request->get('equipment_type');
             $service->location                      = $request->get('location');
             $service->warranty                      = $request->get('warranty');
@@ -372,6 +392,31 @@ class ServiceController extends Controller
             $service->notes                         = $request->get('notes');
             $service->save();
 
+            // CAS Stock
+            if($service->cas_stock != 1 && $service->cas_stock != 2){
+                $casServiceStock                = CasServiceStock::where([['id_service', '=', $service->id], ['id_part', '=', $service->id_part]])->first();
+                if(empty($casServiceStock)){
+                    $casServiceStock = new CasServiceStock;
+                }
+
+                $casServiceStock->id_service    = $service->id;
+                $casServiceStock->id_part       = $service->id_part;
+
+                switch($service->cas_stock){
+                    case 3:
+                        $casServiceStock->stock = 1;
+                    break;
+                    case 4:
+                        $casServiceStock->stock = 0;
+                    break;
+                }
+
+                $casServiceStock->save();
+            }
+
+            if($service->ticket_number              != $old_ticket_number)              $edited_fields[]    = 'numero de ticket';
+            if($service->cas_stock                  != $old_cas_stock)                  $edited_fields[]    = 'stock cas';
+            if($service->id_part                    != $old_id_part)                    $edited_fields[]    = 'parte';
             if($service->id_user                    != $old_id_user)                    $edited_fields[]    = 'usuario';
             if($service->id_client                  != $old_id_client)                  $edited_fields[]    = 'cliente';
             if($service->id_category                != $old_id_category)                $edited_fields[]    = 'categoría';
@@ -385,6 +430,7 @@ class ServiceController extends Controller
             if($service->date_out                   != $old_date_out)                   $edited_fields[]    = 'fecha salida';
             if($service->date_commitment            != $old_date_commitment)            $edited_fields[]    = 'fecha compromiso';
             if($service->defect_according_to_client != $old_defect_according_to_client) $edited_fields[]    = 'defecto según cliente';
+            if($service->work_done                  != $old_work_done)                  $edited_fields[]    = 'trabajo realizado';
             if($service->equipment_type             != $old_equipment_type)             $edited_fields[]    = 'tipo de equipo';
             if($service->location                   != $old_location)                   $edited_fields[]    = 'ubicación';
             if($service->warranty                   != $old_warranty)                   $edited_fields[]    = 'garantía';
@@ -433,6 +479,9 @@ class ServiceController extends Controller
 
         if($me->hasRole('Admin') || $me->can('delete_services')){
             $service = Service::findOrFail($id);
+
+            CasServiceStock::where([['id_service', '=', $service->id], ['id_part', '=', $service->id_part]])->delete();
+
             $service->delete();
 
             flash()->success('El Ticket ha sido borrado.');
@@ -444,9 +493,65 @@ class ServiceController extends Controller
     }
 
     private function sendEmail(Service $service){
-        $mails  = [];
-        $client = $service->client();
-        $cas    = $service->cas();
+        $mails      = [];
+        $client     = $service->client();
+        $cas        = $service->cas();
+
+        $filedir    = '/ticket_pdf/';
+        $filename   = 'ticket_'.$service->id.'.pdf';
+        $cas_stock  = '';
+        $stock_id   = (int) $service->cas_stock;
+
+
+        switch($stock_id){
+            case 1:
+                $cas_stock  = 'Pedido';
+            break;
+            case 2:
+                $cas_stock  = 'En proceso de compra';
+            break;
+            case 3:
+                $cas_stock  = 'Enviado';
+            break;
+            case 4:
+                $cas_stock  = 'Devuelto';
+            break;
+        }
+
+        $pdf_data   = [
+            'id' => $service->id,
+            'ticket_number' => (!empty($service->ticket_number)) ? $service->ticket_number : ' - ',
+            'state' => (!empty($service->state()->name)) ? $service->state()->name : ' - ',
+            'cas' => (!empty($service->cas()->name)) ? $service->cas()->name : ' - ',
+            'cas_stock' => ($cas_stock != '') ? $cas_stock : ' - ',
+            'part' => (!empty($service->part()->description)) ? $service->part()->description : ' - ',
+            'client' => (!empty($service->client()->business_name)) ? $service->client()->business_name : ' - ',
+            'category' => (!empty($service->category()->category)) ? $service->category()->category : ' - ',
+            'brand' => (!empty($service->brand()->brand)) ? $service->brand()->brand : ' - ',
+            'model' => (!empty($service->model()->part_model)) ? $service->model()->part_model : ' - ',
+            'selling_house' => (!empty($service->selling_house()->business_name)) ? $service->selling_house()->business_name : ' - ',
+            'warranty_name' => (!empty($service->warranty()) && !empty($service->warranty()->warranty_type()->warranty_type)) ? $service->warranty()->warranty_type()->warranty_type : ' - ',
+            'purchase_order_num' => (!empty($service->purchase_order_num)) ? $service->purchase_order_num : ' - ',
+            'serial_chasis' => (!empty($service->serial_chasis)) ? $service->serial_chasis : ' - ',
+            'date_in' => (!empty($service->dateInToString(true))) ? $service->dateInToString(true) : ' - ',
+            'date_out' => (!empty($service->dateOutToString(true))) ? $service->dateOutToString(true) : ' - ',
+            'equipment_type' => (!empty($service->equipment_type)) ? $service->equipment_type : ' - ',
+            'defect_according_to_client' => (!empty($service->defect_according_to_client)) ? $service->defect_according_to_client : ' - ',
+            'work_done' => (!empty($service->work_done)) ? $service->work_done : ' - ',
+            'warranty' => ((isset($service->warranty) && (int) $service->warranty === 1)) ? 'Si' : 'No',
+            'stock_reposition_doa' => ((isset($service->stock_reposition_doa) && (int) $service->stock_reposition_doa === 1)) ? 'Si' : 'No',
+            'pending_budget' => ((isset($service->pending_budget) && (int) $service->pending_budget === 1)) ? 'Si' : 'No',
+            'home_service' => ((isset($service->home_service) && (int) $service->home_service === 1)) ? 'Si' : 'No',
+            'stock_repair' => ((isset($service->stock_repair) && (int) $service->stock_repair === 1)) ? 'Si' : 'No',
+            'corrective_maintenance' => ((isset($service->corrective_maintenance) && (int) $service->corrective_maintenance === 1)) ? 'Si' : 'No',
+            'preventive_maintenance' => ((isset($service->preventive_maintenance) && (int) $service->preventive_maintenance === 1)) ? 'Si' : 'No',
+            'pre_aproved_budget' => ((isset($service->pre_aproved_budget) && (int) $service->pre_aproved_budget === 1)) ? 'Si' : 'No',
+            'recolection_service' => ((isset($service->recolection_service) && (int) $service->recolection_service === 1)) ? 'Si' : 'No',
+        ];
+
+        $pdf        = \PDF::loadView('emails.servicePdf', $pdf_data);
+        $filepath   = public_path().$filedir.$filename;
+        $pdf->save($filepath);
 
         if(!empty($client)){
             $client_states = $client->states();
@@ -484,7 +589,7 @@ class ServiceController extends Controller
 
         if(!empty($mails)){
             foreach($mails as $mail){
-                $result = Mail::to($mail)->queue(new ServiceStateChanged($service, $state));
+                $result = Mail::to($mail)->queue(new ServiceStateChanged($service, $state, $filepath));
             }
 
             flash()->success('Se envió un mail a los siguientes suscriptores: '.implode(', ', $mails));

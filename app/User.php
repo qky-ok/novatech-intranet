@@ -18,7 +18,7 @@ class User extends Authenticatable
     use HasRoles;
 
     public function getUserRoleId(){
-        return $this->roles()->first()->id;
+        return (!empty($this->roles()->first())) ? $this->roles()->first()->id : 0;
     }
 
     public function getExtendedData(){

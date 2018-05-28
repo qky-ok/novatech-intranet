@@ -59,7 +59,7 @@
             $(document).ready(function(){
                 $('#data-table').DataTable({
                     responsive  : true,
-                    order       : [1, 'desc'],
+                    order       : [0, 'desc'],
                     dom         : 'Bfrtip',
                     buttons     : [
                         {

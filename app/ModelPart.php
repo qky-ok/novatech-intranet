@@ -12,7 +12,7 @@ class ModelPart extends Model{
      */
     public function model()
     {
-        return $this->belongsTo('App\Model')->first();
+        return $this->belongsTo('App\PartModel', 'id_model')->first();
     }
 
     /**
@@ -20,6 +20,6 @@ class ModelPart extends Model{
      */
     public function part()
     {
-        return $this->belongsTo('App\Part')->first();
+        return $this->belongsTo('App\Part', 'id_part')->first();
     }
 }

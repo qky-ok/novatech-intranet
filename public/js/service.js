@@ -7,7 +7,7 @@ $(document).ready(function(){
     if(dataTableElem.length){
         dataTableElem.DataTable({
             responsive  : true,
-            order       : [9, 'desc'],
+            order       : [0, 'desc'],
             dom         : 'Bfrtip',
             buttons     : [
                 {

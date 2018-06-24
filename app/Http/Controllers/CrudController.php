@@ -12,11 +12,6 @@ class CrudController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $role = Auth::user()->roles->first()->id;
-        if($role == env('CAS_USER')){
-            return view('home');
-        }else{
-            return view('crud.index');
-        }
+        return view('crud.index');
     }
 }

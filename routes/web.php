@@ -198,4 +198,24 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/update', ['as' => 'providers.update', 'uses' => 'ProviderController@update']);
         Route::post('/destroy', ['as' => 'providers.destroy', 'uses' => 'ProviderController@destroy']);
     });
+
+    Route::group(['prefix' => 'interventions'], function() {
+        Route::get('/', ['as' => 'interventions.index', 'uses' => 'InterventionController@index']);
+        Route::get('/show', ['as' => 'interventions.show', 'uses' => 'InterventionController@show']);
+        Route::get('/create', ['as' => 'interventions.create', 'uses' => 'InterventionController@create']);
+        Route::post('/store', ['as' => 'interventions.store', 'uses' => 'InterventionController@store']);
+        Route::get('/edit', ['as' => 'interventions.edit', 'uses' => 'InterventionController@edit']);
+        Route::post('/update', ['as' => 'interventions.update', 'uses' => 'InterventionController@update']);
+        Route::post('/destroy', ['as' => 'interventions.destroy', 'uses' => 'InterventionController@destroy']);
+    });
+
+    Route::group(['prefix' => 'billings'], function() {
+        Route::get('/', ['as' => 'billings.index', 'uses' => 'BillingController@index']);
+        Route::get('/show', ['as' => 'billings.show', 'uses' => 'BillingController@show']);
+        Route::get('/create', ['as' => 'billings.create', 'uses' => 'BillingController@create']);
+        Route::post('/store', ['as' => 'billings.store', 'uses' => 'BillingController@store']);
+        Route::get('/edit', ['as' => 'billings.edit', 'uses' => 'BillingController@edit']);
+        Route::post('/update', ['as' => 'billings.update', 'uses' => 'BillingController@update']);
+        Route::post('/destroy', ['as' => 'billings.destroy', 'uses' => 'BillingController@destroy']);
+    });
 });

@@ -284,9 +284,58 @@
     @if ($errors->has('notes')) <p class="help-block">{{ $errors->first('notes') }}</p> @endif
 </div>
 
+<!-- Interventions -->
+<div class="form-group" style="float:left;width:100%">
+    <div style="float:left; width:48%;">
+        {!! Form::label('Interventions', 'Intervenciones') !!}
+        @if(!empty($interventions))
+            @foreach($interventions as $intervention)
+                <div class="draggable-element-row">
+                <span class="element-name">
+                    {{ $intervention->title }}<br/>
+                </span>
+                    <a href="#" id="add_{{ $intervention->id }}" class="btn btn-success add-element pull-right" data-element="{{ $intervention->id }}"><span class="glyphicon glyphicon-plus"></span></a>
+                </div>
+            @endforeach
+        @endif
+    </div>
+    <div class="draggable-element-edit" style="float:right; width:48%;">
+        {!! Form::label('Interventions', 'Intervenciones Realizadas') !!}
+        @if(isset($used_serv_iner) && !empty($used_serv_iner))
+            @foreach($used_serv_iner as $used_inter)
+                <div id="element_{{ $used_inter->id_intervention }}" class="draggable-element-row">
+                    <input type="hidden" name="intervention_ids[]" value="{{ $used_inter->id_intervention }}" />
+                    <span class="element-name">
+                        {{ $used_inter->intervention()->title }}<br/>
+                    </span>
+                    <a class="btn btn-danger btn-element-delete pull-right" data-element="{{ $used_inter->id_intervention }}'"></span><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+            @endforeach
+        @endif
+    </div>
+</div>
+
 @push('scripts')
     <script src="{{ asset('js/ckeditor_4.7/ckeditor.js') }}"></script>
     <script type="text/javascript">
-        CKEDITOR.replace('description');
+        //CKEDITOR.replace('description');
+
+        $(document).ready(function(){
+            $(document).on('click', '.add-element', function(e){
+                e.preventDefault();
+                var element_id	        =   $(this).data('element');
+                var element		        =   '<span class="element-name">'+$(this).prev().html()+'</span>';
+                var element_template    =   '<div id="element_'+element_id+'" class="draggable-element-row">' +
+                                                '<input type="hidden" name="intervention_ids[]" value="'+element_id+'" />' +
+                                                element +
+                                                '<a class="btn btn-danger btn-element-delete pull-right" data-element="'+element_id+'"></span><span class="glyphicon glyphicon-remove"></span></a>' +
+                                            '</div>';
+                $('.draggable-element-edit').append(element_template);
+            });
+
+            $(document).on('click', '.btn-element-delete', function(){
+                $(this).parent().remove();
+            });
+        });
     </script>
 @endpush

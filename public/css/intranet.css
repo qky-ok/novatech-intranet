@@ -244,3 +244,32 @@ table td p {
   min-height: 0;
   width: 100%;
 }
+
+.form-group .draggable-element-row {
+  background-color: #dedede;
+  height: 45px;
+  margin-top: 5px;
+  padding: 5px;
+  width: 100%;
+}
+
+.form-group .draggable-element-row .element-name{
+  border: 1px solid #bababa;
+  display: inline-block;
+  padding: 6px 9px;
+  background-color: #fff;
+  vertical-align: middle;
+}
+
+.form-group .draggable-element-row .pull-right {
+  float: right!important;
+}
+
+.form-group .draggable-element-row .btn-success, .form-group .draggable-element-row .btn-danger {
+  padding: 6px 12px;
+}
+.client-form.services-for-billing{
+  float: left;
+  padding: 20px 0 0 15px;
+  width: 100%;
+}

@@ -17,6 +17,8 @@ use App\Role;
 use App\Mail\ServiceStateChanged;
 use App\Warranty;
 use App\CasServiceStock;
+use App\Intervention;
+use App\ServiceIntervention;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -72,12 +74,13 @@ class ServiceController extends Controller
         $models         = PartModel::all(['part_model', 'id']);
         $selling_houses = SellingHouse::all(['business_name', 'id']);
         $warranties     = Warranty::all(['num_warranty', 'id']);
+        $interventions  = Intervention::all();
 
         foreach($users as $user){
             if($user->getUserRoleId() == env('CAS_USER')) $cas_users[] = $user;
         }
 
-        return view('service.new', compact(['states', 'cas_users', 'clients', 'parts', 'categories', 'brands', 'models', 'selling_houses', 'warranties']));
+        return view('service.new', compact(['states', 'cas_users', 'clients', 'parts', 'categories', 'brands', 'models', 'selling_houses', 'warranties', 'interventions']));
     }
 
     /**
@@ -165,6 +168,16 @@ class ServiceController extends Controller
         $serviceHistory->id_state       = $service->id_state;
         $serviceHistory->edited_fields  = 'todos';
         $serviceHistory->save();
+
+        $intervention_ids = $request->get('intervention_ids', '');
+        if($intervention_ids != ''){
+            foreach($intervention_ids as $intervention_id){
+                $service_intervention                   = new ServiceIntervention();
+                $service_intervention->id_service       = $service->id;
+                $service_intervention->id_intervention  = $intervention_id;
+                $service_intervention->save();
+            }
+        }
 
         //Send email if there are subscribers
         $this->sendEmail($service);
@@ -278,12 +291,14 @@ class ServiceController extends Controller
         $models         = PartModel::all(['part_model', 'id']);
         $selling_houses = SellingHouse::all(['business_name', 'id']);
         $warranties     = Warranty::all(['num_warranty', 'id']);
+        $interventions  = Intervention::all();
+        $used_serv_iner = ServiceIntervention::where('id_service', $service->id)->get();
 
         foreach($users as $user){
             if($user->getUserRoleId() == env('CAS_USER')) $cas_users[] = $user;
         }
 
-        return view('service.edit', compact(['service', 'states', 'cas_users', 'clients', 'parts', 'categories', 'brands', 'models', 'selling_houses', 'warranties']));
+        return view('service.edit', compact(['service', 'states', 'cas_users', 'clients', 'parts', 'categories', 'brands', 'models', 'selling_houses', 'warranties', 'interventions', 'used_serv_iner']));
     }
 
     /**
@@ -414,6 +429,20 @@ class ServiceController extends Controller
                 $casServiceStock->save();
             }
 
+            // Service Interventions
+            $intervention_ids = $request->get('intervention_ids', '');
+
+            ServiceIntervention::where('id_service', $service->id)->delete();
+
+            if($intervention_ids != ''){
+                foreach($intervention_ids as $intervention_id){
+                    $service_intervention                   = new ServiceIntervention();
+                    $service_intervention->id_service       = $service->id;
+                    $service_intervention->id_intervention  = $intervention_id;
+                    $service_intervention->save();
+                }
+            }
+
             if($service->ticket_number              != $old_ticket_number)              $edited_fields[]    = 'numero de ticket';
             if($service->cas_stock                  != $old_cas_stock)                  $edited_fields[]    = 'stock cas';
             if($service->id_part                    != $old_id_part)                    $edited_fields[]    = 'parte';
@@ -501,7 +530,6 @@ class ServiceController extends Controller
         $filename   = 'ticket_'.$service->id.'.pdf';
         $cas_stock  = '';
         $stock_id   = (int) $service->cas_stock;
-
 
         switch($stock_id){
             case 1:

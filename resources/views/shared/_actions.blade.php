@@ -1,4 +1,4 @@
-@if($entity === 'application_items' || $entity === 'selling_houses' || $entity === 'categories' || $entity === 'clients' || $entity === 'insurance_companies' || $entity === 'families' || $entity === 'warranties' || $entity === 'brands' || $entity === 'part_models' || $entity === 'parts' || $entity === 'providers' || $entity === 'warranty_types')
+@if($entity === 'application_items' || $entity === 'selling_houses' || $entity === 'categories' || $entity === 'clients' || $entity === 'insurance_companies' || $entity === 'families' || $entity === 'warranties' || $entity === 'brands' || $entity === 'part_models' || $entity === 'parts' || $entity === 'providers' || $entity === 'warranty_types' || $entity === 'interventions' || $entity === 'billings')
     {!! Form::open( ['method' => 'get', 'url' => route($entity.'.edit'), 'style' => 'display: inline']) !!}
     {!! Form::text('id', $id, ['class' => 'hidden']) !!}
     <button type="submit" class="btn-delete btn btn-xs btn-warning">

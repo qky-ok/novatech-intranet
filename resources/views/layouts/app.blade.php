@@ -13,7 +13,7 @@
     <!-- Styles -->
 {{--    <link href="{{ asset('css/app.css') }}" rel="stylesheet">--}}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/intranet.css">
+    <link rel="stylesheet" href="/css/intranet.css?v=1">
 
     <style>
         .result-set { margin-top: 1em }
@@ -74,11 +74,9 @@
                             {{--<li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>--}}
                         @else
-                            @if(Auth::user()->roles->first()->id != env('CAS_USER'))
-                                <li class="{{ Request::is('crud*') ? 'active' : '' }}">
-                                    <a href="{{ route('crud.index') }}">Menu</a>
-                                </li>
-                            @endif
+                            <li class="{{ Request::is('crud*') ? 'active' : '' }}">
+                                <a href="{{ route('crud.index') }}">Menu</a>
+                            </li>
 
                             @can('view_users')
                             <li class="{{ Request::is('users*') ? 'active' : '' }}">

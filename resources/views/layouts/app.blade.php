@@ -125,7 +125,7 @@
             </div>
         </nav>
 
-        <div class="container">
+        <div class="container" style="{{ (Route::currentRouteName() === 'services.list') ? 'width:1400px' : '' }}">
             <div id="flash-msg">
                 @include('flash::message')
             </div>

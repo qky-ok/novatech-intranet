@@ -19,9 +19,11 @@
                 {!! Form::submit('Facturar', ['class' => 'btn btn-primary']) !!}
             {!! Form::close() !!}
         @else
-            <div class="col-md-5">
-                <h3 class="modal-title">Sin servicios a facturar</h3>
-            </div>
+            @if(Auth::user()->roles->pluck('name')->first() != 'Admin')
+                <div class="col-md-5">
+                    <h3 class="modal-title">Sin servicios a facturar</h3>
+                </div>
+            @endif
         @endif
     </div>
 

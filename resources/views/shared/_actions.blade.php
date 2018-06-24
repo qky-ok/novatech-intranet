@@ -23,6 +23,14 @@
 @endif
 
 @if($entity === 'services')
+    @if(is_file(public_path().'/ticket_pdf/ticket_'.$id.'.pdf'))
+        {!! Form::open( ['method' => 'get', 'url' => '/services/pdf/'.$id, 'style' => 'display: inline']) !!}
+            <button type="submit" class="btn-delete btn btn-xs btn-success">
+                <i class="glyphicon glyphicon-eye-open"></i>
+            </button>
+        {!! Form::close() !!}
+    @endif
+
     @can('edit_services')
         {!! Form::open( ['method' => 'get', 'url' => route($entity.'.edit'), 'style' => 'display: inline']) !!}
         {!! Form::text('id', $id, ['class' => 'hidden']) !!}

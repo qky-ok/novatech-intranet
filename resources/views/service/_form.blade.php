@@ -32,6 +32,7 @@
 <div class="form-group @if ($errors->has('id_part')) has-error @endif">
     {!! Form::label('id_part', 'Parte') !!}
     <select class="form-control" name="id_part">
+        <option value="0">Seleccione una Parte</option>
         @foreach($parts as $part)
             <option value="{{ $part->id }}" @if(isset($service->id_part) && $service->id_part == $part->id) selected="selected" @endif>{{ $part->description }}</option>
         @endforeach
@@ -43,8 +44,9 @@
 @if(isset($service->cas_stock))
     <!-- CAS Stock Input -->
     <div class="form-group @if ($errors->has('cas_stock')) has-error @endif">
-        {!! Form::label('cas_stock', 'Stock de Parte') !!}
+        {!! Form::label('cas_stock', 'Estado Parte') !!}
         <select class="form-control" name="cas_stock">
+            <option value="0" @if($service->cas_stock == 0) selected="selected" @endif>Seleccionar un Estado</option>
             <option value="1" @if($service->cas_stock == 1) selected="selected" @endif>Pedido</option>
             <option value="2" @if($service->cas_stock == 2) selected="selected" @endif>En proceso de compra</option>
             <option value="3" @if($service->cas_stock == 3) selected="selected" @endif>Enviado</option>

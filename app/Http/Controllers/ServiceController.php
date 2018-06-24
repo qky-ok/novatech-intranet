@@ -38,18 +38,143 @@ class ServiceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
+        return view('service.index');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function list(Request $request){
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
         Controller::addJsFooter('/js/service.js');
 
-        $role = Auth::user()->roles->first()->id;
+        $role               = Auth::user()->roles->first()->id;
+        $service_list_type  = $request->get('service_list_type', 0);
+
         if($role == env('CAS_USER')){
-            $result = Service::where('id_user', Auth::user()->id)->get();
+            switch($service_list_type){
+                case 1;
+                    $result = Service::where('id_user', Auth::user()->id)->where('id_state', 1)->get();
+                break;
+                case 2;
+                    $result = Service::where('id_user', Auth::user()->id)->where('id_state', 2)->get();
+                break;
+                case 3;
+                    $result = Service::where('id_user', Auth::user()->id)->where('id_state', 3)->get();
+                break;
+                case 4;
+                    $result = Service::where('id_user', Auth::user()->id)->where('id_state', 4)->get();
+                break;
+                case 5;
+                    $result = Service::where('id_user', Auth::user()->id)->where('id_state', 5)->get();
+                break;
+                case 6;
+                    $result = Service::where('id_user', Auth::user()->id)->where('id_state', 6)->get();
+                break;
+                case 98:
+                    $services   = Service::where('id_user', Auth::user()->id)->get();
+                    $result     = [];
+
+                    if(!empty($services)){
+                        foreach($services as $item){
+                            if(isset($item->alarmCheck()->name)){
+                                if($item->alarmCheck()->name == 'Alerta Amarilla') $result[] = $item;
+                            }
+                        }
+                    }
+                break;
+                case 99:
+                    $services   = Service::where('id_user', Auth::user()->id)->get();
+                    $result     = [];
+
+                    if(!empty($services)){
+                        foreach($services as $item){
+                            if(isset($item->alarmCheck()->name)){
+                                if($item->alarmCheck()->name == 'Alerta Naranja') $result[] = $item;
+                            }
+                        }
+                    }
+                break;
+                case 100:
+                    $services   = Service::where('id_user', Auth::user()->id)->get();
+                    $result     = [];
+
+                    if(!empty($services)){
+                        foreach($services as $item){
+                            if(isset($item->alarmCheck()->name)){
+                                if($item->alarmCheck()->name == 'Alerta Roja') $result[] = $item;
+                            }
+                        }
+                    }
+                break;
+                default:
+                    $result = Service::where('id_user', Auth::user()->id)->where('id_user', Auth::user()->id)->get();
+            }
         }else{
-            $result = Service::all();
+            switch($service_list_type){
+                case 1;
+                    $result = Service::where('id_state', 1)->get();
+                break;
+                case 2;
+                    $result = Service::where('id_state', 2)->get();
+                break;
+                case 3;
+                    $result = Service::where('id_state', 3)->get();
+                break;
+                case 4;
+                    $result = Service::where('id_state', 4)->get();
+                break;
+                case 5;
+                    $result = Service::where('id_state', 5)->get();
+                break;
+                case 6;
+                    $result = Service::where('id_state', 6)->get();
+                break;
+                case 98:
+                    $services   = Service::all();
+                    $result     = [];
+
+                    if(!empty($services)){
+                        foreach($services as $item){
+                            if(isset($item->alarmCheck()->name)){
+                                if($item->alarmCheck()->name == 'Alerta Amarilla') $result[] = $item;
+                            }
+                        }
+                    }
+                break;
+                case 99:
+                    $services   = Service::all();
+                    $result     = [];
+
+                    if(!empty($services)){
+                        foreach($services as $item){
+                            if(isset($item->alarmCheck()->name)){
+                                if($item->alarmCheck()->name == 'Alerta Naranja') $result[] = $item;
+                            }
+                        }
+                    }
+                break;
+                case 100:
+                    $services   = Service::all();
+                    $result     = [];
+
+                    if(!empty($services)){
+                        foreach($services as $item){
+                            if(isset($item->alarmCheck()->name)){
+                                if($item->alarmCheck()->name == 'Alerta Roja') $result[] = $item;
+                            }
+                        }
+                    }
+                break;
+                default:
+                    $result = Service::all();
+            }
         }
 
-        return view('service.index', compact('result'));
+        return view('service.list', compact('result'));
     }
 
     /**
@@ -102,6 +227,7 @@ class ServiceController extends Controller
         $service->ticket_number                 = $request->get('ticket_number');
         $service->id_state                      = $request->get('id_state');
         $service->id_part                       = $request->get('id_part');
+        $service->cas_stock                     = 0;
         $service->id_user                       = $request->get('id_user');
         $service->id_client                     = $request->get('id_client');
         $service->id_category                   = $request->get('id_category');
@@ -180,7 +306,7 @@ class ServiceController extends Controller
         }
 
         //Send email if there are subscribers
-        $this->sendEmail($service);
+        $this->sendEmail($service, 'create');
 
         flash('El Ticket ha sido creado.');
 
@@ -408,7 +534,7 @@ class ServiceController extends Controller
             $service->save();
 
             // CAS Stock
-            if($service->cas_stock != 1 && $service->cas_stock != 2){
+            if($service->cas_stock != 0 && $service->cas_stock != 1 && $service->cas_stock != 2){
                 $casServiceStock                = CasServiceStock::where([['id_service', '=', $service->id], ['id_part', '=', $service->id_part]])->first();
                 if(empty($casServiceStock)){
                     $casServiceStock = new CasServiceStock;
@@ -416,14 +542,10 @@ class ServiceController extends Controller
 
                 $casServiceStock->id_service    = $service->id;
                 $casServiceStock->id_part       = $service->id_part;
+                $casServiceStock->stock         = 1;
 
-                switch($service->cas_stock){
-                    case 3:
-                        $casServiceStock->stock = 1;
-                    break;
-                    case 4:
-                        $casServiceStock->stock = 0;
-                    break;
+                if($service->cas_stock == 4){
+                    $casServiceStock->stock = 0;
                 }
 
                 $casServiceStock->save();
@@ -521,9 +643,10 @@ class ServiceController extends Controller
         return redirect()->route('services.index');
     }
 
-    private function sendEmail(Service $service){
-        $mails      = [];
+    private function sendEmail(Service $service, $ticketState = null){
         $client     = $service->client();
+        $subject    = ($ticketState !== null) ? 'Service Novatech – Alta de ticket' : 'Service Novatech - Cambio de Estado';
+        $mails      = ($ticketState !== null) ? (!empty($client) && $client->email !== null) ? [$client->email, 'admin@novatech.com.ar'] : ['admin@novatech.com.ar'] : [];
         $cas        = $service->cas();
 
         $filedir    = '/ticket_pdf/';
@@ -617,12 +740,21 @@ class ServiceController extends Controller
 
         if(!empty($mails)){
             foreach($mails as $mail){
-                $result = Mail::to($mail)->queue(new ServiceStateChanged($service, $state, $filepath));
+                $result = Mail::to($mail)->queue(new ServiceStateChanged($service, $state, $filepath, $subject));
             }
 
             flash()->success('Se envió un mail a los siguientes suscriptores: '.implode(', ', $mails));
         }else{
             flash()->info('No se encontraron suscriptores');
+        }
+    }
+
+    public function getPdf(Request $request){
+        $service_id         = $request->route('id');
+        $service_pdf_path   = public_path().'/ticket_pdf/ticket_'.$service_id.'.pdf';
+
+        if(is_file($service_pdf_path)){
+            return response()->file($service_pdf_path);
         }
     }
 }

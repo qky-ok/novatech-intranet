@@ -58,7 +58,7 @@ class Controller extends BaseController
      * @return void|string
      **/
     static function MakeCSS($href){
-        $css_tag = '<link href="'.$href.'" rel="stylesheet" type="text/css">';
+        $css_tag = '<link href="'.$href.'?v=240618" rel="stylesheet" type="text/css">';
         return $css_tag;
     }
 
@@ -68,7 +68,7 @@ class Controller extends BaseController
      * @return void|string
      **/
     static function MakeJS($src){
-        $js_tag = '<script src="'.$src.'" type="text/javascript"></script>';
+        $js_tag = '<script src="'.$src.'?v=240618" type="text/javascript"></script>';
         return $js_tag;
     }
 }

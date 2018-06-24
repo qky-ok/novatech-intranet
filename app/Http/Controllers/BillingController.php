@@ -28,9 +28,11 @@ class BillingController extends Controller
         $user                   = Auth::user();
         $billing_services_ids   = [];
         if($user->hasRole('CAS')){
-            $billing = Billing::where('id_user', $user->id)->get();
+            $billing                = Billing::where('id_user', $user->id)->get();
+            $servicesForBillingRaw  = Service::where([['cas_stock', '=', 0], ['id_user', '=', $user->id], ['id_state', '=', 5]])->get(); // id_state = 5 -> Entregado
         }else{
-            $billing = Billing::all();
+            $billing                = Billing::all();
+            $servicesForBillingRaw  = Service::where([['cas_stock', '=', 0], ['id_state', '=', 5]])->get(); // id_state = 5 -> Entregado
         }
 
         if(!empty($billing)){
@@ -46,7 +48,6 @@ class BillingController extends Controller
         }
 
         $servicesForBilling     = [];
-        $servicesForBillingRaw  = Service::where([['cas_stock', '=', 0], ['id_user', '=', $user->id], ['id_state', '=', 5]])->get(); // id_state = 5 -> Entregado
 
         if(!empty($servicesForBillingRaw)){
             foreach($servicesForBillingRaw as $serviceForBilling){

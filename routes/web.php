@@ -57,6 +57,7 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::group(['prefix' => 'services'], function() {
         Route::get('/', ['as' => 'services.index', 'uses' => 'ServiceController@index']);
+        Route::post('/list', ['as' => 'services.list', 'uses' => 'ServiceController@list']);
         Route::get('/show', ['as' => 'services.show', 'uses' => 'ServiceController@show']);
         Route::get('/create', ['as' => 'services.create', 'uses' => 'ServiceController@create']);
         Route::post('/store', ['as' => 'services.store', 'uses' => 'ServiceController@store']);
@@ -64,6 +65,7 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/update', ['as' => 'services.update', 'uses' => 'ServiceController@update']);
         Route::post('/history', ['as' => 'services.history', 'uses' => 'ServiceController@getHistory']);
         Route::post('/destroy', ['as' => 'services.destroy', 'uses' => 'ServiceController@destroy']);
+        Route::get('/pdf/{id}', ['as' => 'services.pdf', 'uses' => 'ServiceController@getPdf']);
     });
 
     Route::group(['prefix' => 'service_alarms'], function() {

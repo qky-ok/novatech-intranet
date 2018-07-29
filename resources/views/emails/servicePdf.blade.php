@@ -1,217 +1,200 @@
+<html>
 <body>
-    <style>
-        body {
-            font-family: "Source Sans Pro",Calibri,Candara,Arial,sans-serif;
-            font-size: 15px;
-            line-height: 1.42857143;
-            color: #333333;
-            background-color: #ffffff;
+<style>
+    @media print{
+        *{
+            -webkit-transition: none !important;
+            transition: none !important;
         }
+    }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+    body{
+        font-family: "Source Sans Pro",Calibri,Candara,Arial,sans-serif;
+        line-height: 1.42857143;
+        color: #333333;
+        background-color: #ffffff;
+    }
 
-        label {
-            display: inline-block;
-            max-width: 100%;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+    table{
+        margin: 0;
+        padding: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
 
-        .form-control {
-            display: block;
-            width: 100%;
-            height: 43px;
-            padding: 10px 18px;
-            font-size: 15px;
-            line-height: 1.42857143;
-            color: #333333;
-            background-color: #ffffff;
-            background-image: none;
-            border: 1px solid #cccccc;
-            border-radius: 0;
-            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-            box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-            box-sizing: border-box;
-        }
+    .form-group label{
+        font-size: 12px;
+        font-weight: bold;
+        color: #393185;
+        text-transform: uppercase;
+        background-color: #bed2ee;
+        padding: 0 9px 1px 9px;
+        display: block;
+        border: 2px solid #393185;
+    }
 
-        .service-form .form-group input[type='checkbox'] {
-            margin: 4px 0 0 4px;
-            line-height: normal;
-        }
+    .form-group div{
+        font-size: 13px;
+        padding: 2px 9px 4px 9px;
+        display: block;
+        border-left: 2px solid #393185;
+        border-right: 2px solid #393185;
+    }
 
-        textarea{
-            height: auto;
-            box-sizing: border-box;
-        }
-    </style>
+    .form-group div.mid-row{
+        border-left: 0;
+        border-right: 0;
+        border-top: 2px solid #393185;
+        border-left: 2px solid #393185;
+        border-right: 2px solid #393185;
+    }
 
-    <h1>Ticket:</h1><br/>
-    <!-- Ticket Number Input -->
-    <div class="form-group">
-        {!! Form::label('ticket_number', 'N° de Ticket') !!}
-        <div>{{ (!empty($ticket_number)) ? $ticket_number : null }}</div>
-    </div>
+    .form-group div.mid-row.first-row{
+        border-right: 0;
+    }
 
-    <!-- States Form Input -->
-    <div class="form-group">
-        {!! Form::label('id_state', 'Estado') !!}
-        <div>{{ (isset($state)) ? $state : null }}</div>
-    </div>
+    .form-group div.mid-row span.title{
+        color: #393185;
+        font-weight: bold;
+        margin-right: 5px;
+    }
 
-    <!-- CAS Users Form Input -->
-    <div class="form-group">
-        {!! Form::label('id_user', 'CAS') !!}
-        <div>{{ (isset($cas)) ? $cas : null }}</div>
-    </div>
+    .form-group div.last-div{
+        border-bottom: 2px solid #393185;
+    }
 
-    <!-- CAS Stock Input -->
-    <div class="form-group">
-        {!! Form::label('cas_stock', 'Stock de Parte') !!}
-        <div>{{ (isset($cas_stock)) ? $cas_stock : null }}</div>
-    </div>
+    .more-observations{
+        margin: 20px 0;
+        border: 2px solid #393185;
+    }
 
-    <!--Parts Input -->
-    <div class="form-group">
-        {!! Form::label('id_part', 'Parte') !!}
-        <div>{{ (isset($part)) ? $part : null }}</div>
-    </div>
+    .nova-logo img{
+        display: block;
+        width: 250px;
+        border: none;
+    }
 
-    <!-- Clients Form Input -->
-    <div class="form-group">
-        {!! Form::label('id_client', 'Cliente') !!}
-        <div>{{ (isset($client)) ? $client : null }}</div>
-    </div>
+    .nova-logo div{
+        width: 235px;
+        margin: 5px 0 15px;
+        padding: 2px 10px 5px 10px;
+        color: white;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 14px;
+        background-color: #048bef;
+        border: none;
+    }
 
-    <!-- Categories Form Input -->
-    <div class="form-group">
-        {!! Form::label('id_category', 'Categoría') !!}
-        <div>{{ (isset($category)) ? $category : null }}</div>
-    </div>
+    .nova-contact{
+        margin: 0;
+        padding: 0;
+    }
 
-    <!-- Brands Form Input -->
-    <div class="form-group">
-        {!! Form::label('id_brand', 'Marca') !!}
-        <div>{{ (isset($brand)) ? $brand : null }}</div>
-    </div>
+    .nova-contact div{
+        margin: -40px 0 0 0;
+        padding: 0 0 0 165px;
+        font-size: 14px;
+        text-align: left !important;
+        border: none;
+        display: block;
+    }
+</style>
 
-    <!-- Models Form Input -->
-    <div class="form-group">
-        {!! Form::label('id_model', 'Modelo') !!}
-        <div>{{ (isset($model)) ? $model : null }}</div>
-    </div>
+<table class="form-group" border="0" cellspacing="0" cellpadding="0" width="92%">
+    <tr>
+        <td width="50%">
+            <div class="nova-logo" style="border:none;padding:0">
+                <img src="http://soporte.novatech.com.ar/img/nova_logo_pdf.jpg" />
+                <div>FORMULARIO SOPORTE TÉCNICO</div>
+            </div>
+        </td>
+        <td width="50%">
+            <div class="nova-contact" style="border:none">
+                <div>
+                    Novatech Solutions S.A.<br/>
+                    Uspallata 2766 - CABA<br/>
+                    República Argentina<br/>
+                    soportetecnico@novatech.com.ar<br/>
+                    0800-333-8862<br/>
+                </div>
+            </div>
+        </td>
+    </tr>
 
-    <!-- Selling House Form Input -->
-    <div class="form-group">
-        {!! Form::label('id_selling_house', 'Casa Vendedora') !!}
-        <div>{{ (isset($selling_house)) ? $selling_house : null }}</div>
-    </div>
+    <tr><td width="100%" colspan="2"><label for="ticket_number">N° de Ticket</label></td></tr>
+    <tr><td width="100%" colspan="2"><div>{{ (!empty($ticket_number)) ? $ticket_number : null }}</div></td></tr>
 
-    <!-- Warranty Form Input -->
-    <div class="form-group">
-        {!! Form::label('id_warranty', 'Garantía') !!}
-        <div>{{ (isset($warranty_name)) ? $warranty_name : null }}</div>
-    </div>
+    <tr><td width="100%" colspan="2"><label for="id_client">Cliente</label></td></tr>
+    <tr><td width="100%" colspan="2"><div>{{ (isset($client)) ? $client : null }}</div></td></tr>
 
-    <!-- Purchase Order Number of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('purchase_order_num', 'Número de factura de compra') !!}
-        <div>{{ (isset($purchase_order_num)) ? $purchase_order_num : null }}</div>
-    </div>
+    <tr><td width="100%" colspan="2"><label for="id_user">CAS</label></td></tr>
+    <tr><td width="100%" colspan="2"><div>{{ (isset($cas_name)) ? $cas_name : null }}</div></td></tr>
+    <tr>
+        <td width="50%">
+            <div class="mid-row first-row"><span class="title">Dirección: </span><span>{{ (isset($cas_address)) ? $cas_address : null }}</span></div>
+        </td>
+        <td width="50%">
+            <div class="mid-row"><span class="title">Tel.: </span><span>{{ (isset($cas_phone_customers)) ? $cas_phone_customers : null }}</span></div>
+        </td>
+    </tr>
+    <tr>
+        <td width="50%">
+            <div class="mid-row first-row"><span class="title">E-mail: </span><span>{{ (isset($cas_contact_email)) ? $cas_contact_email : null }}</span></div>
+        </td>
+        <td width="50%">
+            <div class="mid-row"><span class="title">Website: </span><span>{{ (isset($cas_website)) ? $cas_website : null }}</span></div>
+        </td>
+    </tr>
 
-    <!-- Serial/Chasis of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('serial_chasis', 'Serial / Chasis') !!}
-        <div>{{ (isset($serial_chasis)) ? $serial_chasis : null }}</div>
-    </div>
+    <tr><td width="100%" colspan="2"><label for="id_client">Cliente</label></td></tr>
+    <tr><td width="100%" colspan="2"><div>{{ (isset($client)) ? $client : null }}</div></td></tr>
 
-    <!-- Date IN of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('date_in', 'Fecha de entrada') !!}
-        <div>{{ (isset($date_in) && $date_in !== '1970-01-01 00:00:00') ? $date_in : ' - ' }}</div>
-        </div>
-    </div>
+    <tr><td width="100%" colspan="2"><label for="id_category">Categoría</label></td></tr>
+    <tr><td width="100%" colspan="2"><div>{{ (isset($category)) ? $category : null }}</div></td></tr>
 
-    <!-- Date OUT of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('date_out', 'Fecha de salida') !!}
-        <div>{{ (isset($date_out) && $date_out !== '1970-01-01 00:00:00') ? $date_out : ' - ' }}</div>
-        </div>
-    </div>
+    <tr><td width="100%" colspan="2"><label for="id_brand">Marca</label></td></tr>
+    <tr><td width="100%" colspan="2"><div>{{ (isset($brand)) ? $brand : null }}</div></td></tr>
 
-    <!-- Equipment type of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('equipment_type', 'Tipo de equipo') !!}
-        <div>{{ (isset($equipment_type)) ? $equipment_type : null }}</div>
-    </div>
+    <tr><td width="100%" colspan="2"><label for="id_model">Modelo</label></td></tr>
+    <tr><td width="100%" colspan="2"><div>{{ (isset($model)) ? $model : null }}</div></td></tr>
 
-    <!-- Defect Form Input -->
-    <div class="form-group">
-        {!! Form::label('defect_according_to_client', 'Defecto según el cliente') !!}
-        <div>{!! $defect_according_to_client !!}</div>
-    </div>
+    <tr><td width="100%" colspan="2"><label for="id_selling_house">Casa Vendedora</label></td></tr>
+    <tr><td width="100%" colspan="2"><div>{{ (isset($selling_house)) ? $selling_house : null }}</div></td></tr>
 
-    <!-- Work Done Form Input -->
-    <div class="form-group">
-        {!! Form::label('work_done', 'Trabajo realizado') !!}
-         <div>{!! $work_done !!}</div>
-    </div>
+    <tr><td width="100%" colspan="2"><label for="purchase_order_num">Número de factura de compra</label></td></tr>
+    <tr><td width="100%" colspan="2"><div>{{ (isset($purchase_order_num)) ? $purchase_order_num : null }}</div></td></tr>
 
-    <!-- Warranty of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('warranty', 'Garantía') !!}
-        {!! Form::checkbox('warranty', 1, (isset($warranty) && $warranty === 1) ? true : false) !!}
-    </div>
+    <tr><td width="100%" colspan="2"><label for="serial_chasis">Serial / Chasis</label></td></tr>
+    <tr><td width="100%" colspan="2"><div>{{ (isset($serial_chasis)) ? $serial_chasis : null }}</div></td></tr>
 
-    <!-- Stock Reposition DOA of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('stock_reposition_doa', 'Resposición de stock (DOA)') !!}
-        {!! Form::checkbox('stock_reposition_doa', 1, (isset($stock_reposition_doa) && $stock_reposition_doa === 1) ? true : false) !!}
-    </div>
+    <tr>
+        <td width="50%"><label for="date_in">Fecha de ingreso <img src="http://soporte.novatech.com.ar/img/nova_pdf_arrow.png" style="width: 9px; margin: 0 0 -1px 0" /></label></td>
+        <td width="50%"><label for="date_out" style="border-left:0">Fecha de egreso <img src="http://soporte.novatech.com.ar/img/nova_pdf_arrow.png" style="width: 9px; margin: 0 0 -1px 0; transform:rotate(180deg)" /></label></td>
+    </tr>
+    <tr>
+        <td width="50%"><div>{{ (isset($date_in) && $date_in !== '1970-01-01 00:00:00') ? $date_in : ' - ' }}</div></td>
+        <td width="50%"><div style="border-left:0">{{ (isset($date_out) && $date_out !== '1970-01-01 00:00:00') ? $date_out : ' - ' }}</div></td>
+    </tr>
 
-    <!-- Pending Budget of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('pending_budget', 'A Presupuestar') !!}
-        {!! Form::checkbox('pending_budget', 1, (isset($pending_budget) && $pending_budget === 1) ? true : false) !!}
-    </div>
+    <tr><td width="100%" colspan="2"><label for="equipment_type">Tipo de equipo</label></td></tr>
+    <tr><td width="100%" colspan="2"><div>{{ (isset($equipment_type)) ? $equipment_type : null }}</div></td></tr>
 
-    <!-- Home service of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('home_service', 'Servicio a domicilio') !!}
-        {!! Form::checkbox('home_service', 1, (isset($home_service) && $home_service === 1) ? true : false) !!}
-    </div>
+    <tr><td width="100%" colspan="2"><label for="work_done">Trabajo realizado</label></td></tr>
+    <tr><td width="100%" colspan="2"><div>{!! $work_done !!}</div></td></tr>
 
-    <!-- Stock repair of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('stock_repair', 'Reparación de stock') !!}
-        {!! Form::checkbox('stock_repair', 1, (isset($stock_repair) && $stock_repair === 1) ? true : false) !!}
-    </div>
+    <tr><td width="100%" colspan="2"><label for="id_state">Estado</label></td></tr>
+    <tr><td width="100%" colspan="2"><div class="last-div" style="padding: 11px 9px 40px">{{ (isset($state)) ? $state : null }}</div></td></tr>
 
-    <!-- Corrective maintenance of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('corrective_maintenance', 'Mantenimiento correctivo') !!}
-        {!! Form::checkbox('corrective_maintenance', 1, (isset($corrective_maintenance) && $corrective_maintenance === 1) ? true : false) !!}
-    </div>
-
-    <!-- Preventive maintenance of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('preventive_maintenance', 'Mantenimiento preventivo') !!}
-        {!! Form::checkbox('preventive_maintenance', 1, (isset($preventive_maintenance) && $preventive_maintenance === 1) ? true : false) !!}
-    </div>
-
-    <!-- Pre aproved budget of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('pre_aproved_budget', 'Presupuesto pre aprobado') !!}
-        {!! Form::checkbox('pre_aproved_budget', 1, (isset($pre_aproved_budget) && $pre_aproved_budget === 1) ? true : false) !!}
-    </div>
-
-    <!-- Recolection service of Service Form Input -->
-    <div class="form-group">
-        {!! Form::label('recolection_service', 'Servicio de recolección') !!}
-        {!! Form::checkbox('recolection_service', 1, (isset($recolection_service) && $recolection_service === 1) ? true : false) !!}
-    </div>
+    <tr>
+        <td width="100%" colspan="2">
+            <div class="more-observations">
+                <br/>
+                <br/>
+                <br/>
+            </div>
+        </td>
+    </tr>
+</table>
 </body>
+</html>

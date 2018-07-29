@@ -24,6 +24,14 @@ class Service extends Model{
     }
 
     /**
+     * Get the CAS for the Service.
+     */
+    public function user_cas()
+    {
+        return $this->hasOne('App\UserCas', 'id', 'id_user')->first();
+    }
+
+    /**
      * Get the Brand for the Service.
      */
     public function part()

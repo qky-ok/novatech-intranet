@@ -316,12 +316,70 @@ class ServiceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Service  $service
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show(Service $service)
-    {
-        //
+    public function showPdf(Request $request){
+        $id_service = $request->route('id');
+        $service    = Service::findOrFail($id_service);
+        $cas_stock  = '';
+        $stock_id   = (int) $service->cas_stock;
+
+        switch($stock_id){
+            case 1:
+                $cas_stock  = 'Pedido';
+                break;
+            case 2:
+                $cas_stock  = 'En proceso de compra';
+                break;
+            case 3:
+                $cas_stock  = 'Enviado';
+                break;
+            case 4:
+                $cas_stock  = 'Devuelto';
+                break;
+        }
+
+        $cas_name = (!empty($service->user_cas()->business_name)) ? $service->user_cas()->business_name : ' - ';
+        $cas_address = (!empty($service->user_cas()->address)) ? $service->user_cas()->address : ' - ';
+        $cas_contact_email = (!empty($service->user_cas()->contact_email)) ? $service->user_cas()->contact_email : ' - ';
+        $cas_phone_customers = (!empty($service->user_cas()->phone_customers)) ? $service->user_cas()->phone_customers : ' - ';
+        $cas_website = (!empty($service->user_cas()->website)) ? $service->user_cas()->website : ' - ';
+        $id = $service->id;
+        $ticket_number = (!empty($service->ticket_number)) ? $service->ticket_number : ' - ';
+        $state = (!empty($service->state()->name)) ? $service->state()->name : ' - ';
+        $cas_stock = ($cas_stock != '') ? $cas_stock : ' - ';
+        $part = (!empty($service->part()->description)) ? $service->part()->description : ' - ';
+        $client = (!empty($service->client()->business_name)) ? $service->client()->business_name : ' - ';
+        $category = (!empty($service->category()->category)) ? $service->category()->category : ' - ';
+        $brand = (!empty($service->brand()->brand)) ? $service->brand()->brand : ' - ';
+        $model = (!empty($service->model()->part_model)) ? $service->model()->part_model : ' - ';
+        $selling_house = (!empty($service->selling_house()->business_name)) ? $service->selling_house()->business_name : ' - ';
+        $warranty_name = (!empty($service->warranty()) && !empty($service->warranty()->warranty_type()->warranty_type)) ? $service->warranty()->warranty_type()->warranty_type : ' - ';
+        $purchase_order_num = (!empty($service->purchase_order_num)) ? $service->purchase_order_num : ' - ';
+        $serial_chasis = (!empty($service->serial_chasis)) ? $service->serial_chasis : ' - ';
+        $date_in = (!empty($service->dateInToString(true))) ? $service->dateInToString(true) : ' - ';
+        $date_out = (!empty($service->dateOutToString(true))) ? $service->dateOutToString(true) : ' - ';
+        $equipment_type = (!empty($service->equipment_type)) ? $service->equipment_type : ' - ';
+        $defect_according_to_client = (!empty($service->defect_according_to_client)) ? $service->defect_according_to_client : ' - ';
+        $work_done = (!empty($service->work_done)) ? $service->work_done : ' - ';
+        $warranty = ((isset($service->warranty) && (int) $service->warranty === 1)) ? 'Si' : 'No';
+        $stock_reposition_doa = ((isset($service->stock_reposition_doa) && (int) $service->stock_reposition_doa === 1)) ? 'Si' : 'No';
+        $pending_budget = ((isset($service->pending_budget) && (int) $service->pending_budget === 1)) ? 'Si' : 'No';
+        $home_service = ((isset($service->home_service) && (int) $service->home_service === 1)) ? 'Si' : 'No';
+        $stock_repair = ((isset($service->stock_repair) && (int) $service->stock_repair === 1)) ? 'Si' : 'No';
+        $corrective_maintenance = ((isset($service->corrective_maintenance) && (int) $service->corrective_maintenance === 1)) ? 'Si' : 'No';
+        $preventive_maintenance = ((isset($service->preventive_maintenance) && (int) $service->preventive_maintenance === 1)) ? 'Si' : 'No';
+        $pre_aproved_budget = ((isset($service->pre_aproved_budget) && (int) $service->pre_aproved_budget === 1)) ? 'Si' : 'No';
+        $recolection_service = ((isset($service->recolection_service) && (int) $service->recolection_service === 1)) ? 'Si' : 'No';
+
+        $view =  \View::make('service.servicePdf', compact(['id', 'ticket_number', 'state', 'cas_name', 'cas_address', 'cas_contact_email', 'cas_phone_customers', 'cas_website', 'cas_stock', 'part', 'client', 'category', 'brand', 'model', 'selling_house', 'warranty_name', 'purchase_order_num', 'serial_chasis', 'date_in', 'date_out', 'equipment_type', 'defect_according_to_client', 'work_done', 'warranty', 'stock_reposition_doa', 'pending_budget', 'home_service', 'stock_repair', 'corrective_maintenance', 'preventive_maintenance', 'pre_aproved_budget', 'recolection_service']))->render();
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view);
+        $pdf->setPaper('A4');
+        return $pdf->stream('servicePdf');
+
+        //return view('service.servicePdf', compact(['id', 'ticket_number', 'state', 'cas_name', 'cas_address', 'cas_contact_email', 'cas_phone_customers', 'cas_website', 'cas_stock', 'part', 'client', 'category', 'brand', 'model', 'selling_house', 'warranty_name', 'purchase_order_num', 'serial_chasis', 'date_in', 'date_out', 'equipment_type', 'defect_according_to_client', 'work_done', 'warranty', 'stock_reposition_doa', 'pending_budget', 'home_service', 'stock_repair', 'corrective_maintenance', 'preventive_maintenance', 'pre_aproved_budget', 'recolection_service']));
     }
 
     /**
@@ -478,6 +536,7 @@ class ServiceController extends Controller
             $old_recolection_service                = $service->recolection_service;
             $old_preventive_maintenance             = $service->preventive_maintenance;
             $old_notes                              = $service->notes;
+            $old_marked_for_billing                 = $service->marked_for_billing;
 
             $service->ticket_number                 = $request->get('ticket_number');
             $service->id_state                      = $request->get('id_state');
@@ -531,6 +590,7 @@ class ServiceController extends Controller
             $service->recolection_service           = $request->get('recolection_service');
             $service->preventive_maintenance        = $request->get('preventive_maintenance');
             $service->notes                         = $request->get('notes');
+            if($service->id_state == 9 && $old_marked_for_billing == 0) $service->marked_for_billing = 1; // Si tiene estado Reparado al menos una vez
             $service->save();
 
             // CAS Stock
@@ -544,7 +604,7 @@ class ServiceController extends Controller
                 $casServiceStock->id_part       = $service->id_part;
                 $casServiceStock->stock         = 1;
 
-                if($service->cas_stock == 4){
+                if($service->cas_stock == 4 || $service->cas_stock == 5){ // Devuelto o Recibido conforme
                     $casServiceStock->stock = 0;
                 }
 
@@ -673,7 +733,11 @@ class ServiceController extends Controller
             'id' => $service->id,
             'ticket_number' => (!empty($service->ticket_number)) ? $service->ticket_number : ' - ',
             'state' => (!empty($service->state()->name)) ? $service->state()->name : ' - ',
-            'cas' => (!empty($service->cas()->name)) ? $service->cas()->name : ' - ',
+            'cas_name' => (!empty($service->user_cas()->business_name)) ? $service->user_cas()->business_name : ' - ',
+            'cas_address' => (!empty($service->user_cas()->address)) ? $service->user_cas()->address : ' - ',
+            'cas_contact_email' => (!empty($service->user_cas()->contact_email)) ? $service->user_cas()->contact_email : ' - ',
+            'cas_phone_customers' => (!empty($service->user_cas()->phone_customers)) ? $service->user_cas()->phone_customers : ' - ',
+            'cas_website' => (!empty($service->user_cas()->website)) ? $service->user_cas()->website : ' - ',
             'cas_stock' => ($cas_stock != '') ? $cas_stock : ' - ',
             'part' => (!empty($service->part()->description)) ? $service->part()->description : ' - ',
             'client' => (!empty($service->client()->business_name)) ? $service->client()->business_name : ' - ',
@@ -701,6 +765,7 @@ class ServiceController extends Controller
         ];
 
         $pdf        = \PDF::loadView('emails.servicePdf', $pdf_data);
+        $pdf->setPaper('A4');
         $filepath   = public_path().$filedir.$filename;
         $pdf->save($filepath);
 

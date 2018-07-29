@@ -58,7 +58,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::group(['prefix' => 'services'], function() {
         Route::get('/', ['as' => 'services.index', 'uses' => 'ServiceController@index']);
         Route::post('/list', ['as' => 'services.list', 'uses' => 'ServiceController@list']);
-        Route::get('/show', ['as' => 'services.show', 'uses' => 'ServiceController@show']);
+        Route::get('/show-pdf/{id}', ['as' => 'services.show_pdf', 'uses' => 'ServiceController@showPdf']);
         Route::get('/create', ['as' => 'services.create', 'uses' => 'ServiceController@create']);
         Route::post('/store', ['as' => 'services.store', 'uses' => 'ServiceController@store']);
         Route::get('/edit', ['as' => 'services.edit', 'uses' => 'ServiceController@edit']);
@@ -213,6 +213,7 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::group(['prefix' => 'billings'], function() {
         Route::get('/', ['as' => 'billings.index', 'uses' => 'BillingController@index']);
+        Route::get('/pre-list', ['as' => 'billings.pre_list', 'uses' => 'BillingController@preList']);
         Route::get('/show', ['as' => 'billings.show', 'uses' => 'BillingController@show']);
         Route::get('/create', ['as' => 'billings.create', 'uses' => 'BillingController@create']);
         Route::post('/store', ['as' => 'billings.store', 'uses' => 'BillingController@store']);

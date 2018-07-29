@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Billing;
 use App\BillingService;
+use App\CasServiceStock;
 use App\Service;
 use App\ServiceIntervention;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Response;
@@ -29,10 +31,10 @@ class BillingController extends Controller
         $billing_services_ids   = [];
         if($user->hasRole('CAS')){
             $billing                = Billing::where('id_user', $user->id)->get();
-            $servicesForBillingRaw  = Service::where([['cas_stock', '=', 0], ['id_user', '=', $user->id], ['id_state', '=', 5]])->get(); // id_state = 5 -> Entregado
+            $servicesForBillingRaw  = Service::where([['id_user', '=', $user->id], ['cas_stock', '=', 5], ['marked_for_billing', '=', 1]])->get(); // cas_stock = 5 -> Recibido conforme
         }else{
             $billing                = Billing::all();
-            $servicesForBillingRaw  = Service::where([['cas_stock', '=', 0], ['id_state', '=', 5]])->get(); // id_state = 5 -> Entregado
+            $servicesForBillingRaw  = Service::where([['cas_stock', '=', 5], ['marked_for_billing', '=', 1]])->get(); // cas_stock = 5 -> Recibido conforme
         }
 
         if(!empty($billing)){
@@ -56,6 +58,21 @@ class BillingController extends Controller
         }
 
         return view('billing.index', compact('billing', 'servicesForBilling'));
+    }
+
+    public function preList(){
+        Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
+        Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
+
+        $casServiceStock    = CasServiceStock::where('stock', 1)->get();
+        $users              = User::all(['name', 'id']);
+        $cas_users          = [];
+
+        foreach($users as $user){
+            if($user->getUserRoleId() == env('CAS_USER')) $cas_users[] = $user;
+        }
+
+        return view('billing.pre_list', compact('casServiceStock', 'cas_users'));
     }
 
     /**

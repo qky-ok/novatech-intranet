@@ -11,6 +11,7 @@
             <a href="{{ url('categories') }}" class="btn btn-primary btn-sm">Categorías</a>
             <a href="{{ url('clients') }}" class="btn btn-primary btn-sm">Clientes</a>
             <a href="{{ url('insurance_companies') }}" class="btn btn-primary btn-sm">Compañías Aseguradoras</a>
+            <a href="{{ url('billings/pre-list') }}" class="btn btn-primary btn-sm">Estados pre Facturación</a>
         @endif
 
         <a href="{{ url('billings') }}" class="btn btn-primary btn-sm">Facturación</a>

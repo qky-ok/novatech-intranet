@@ -51,6 +51,8 @@
             <option value="2" @if($service->cas_stock == 2) selected="selected" @endif>En proceso de compra</option>
             <option value="3" @if($service->cas_stock == 3) selected="selected" @endif>Enviado</option>
             <option value="4" @if($service->cas_stock == 4) selected="selected" @endif>Devuelto</option>
+            <option value="5" @if($service->cas_stock == 5) selected="selected" @endif>Recibido Conforme</option>
+            <option value="6" @if($service->cas_stock == 6) selected="selected" @endif>Recibido NO Conforme</option>
         </select>
 
         @if ($errors->has('cas_stock')) <p class="help-block">{{ $errors->first('cas_stock') }}</p> @endif

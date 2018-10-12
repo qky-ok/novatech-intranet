@@ -58,6 +58,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::group(['prefix' => 'services'], function() {
         Route::get('/', ['as' => 'services.index', 'uses' => 'ServiceController@index']);
         Route::post('/list', ['as' => 'services.list', 'uses' => 'ServiceController@list']);
+        Route::post('/list-id', ['as' => 'services.list_by_id', 'uses' => 'ServiceController@listById']);
         Route::get('/show-pdf/{id}', ['as' => 'services.show_pdf', 'uses' => 'ServiceController@showPdf']);
         Route::get('/create', ['as' => 'services.create', 'uses' => 'ServiceController@create']);
         Route::post('/store', ['as' => 'services.store', 'uses' => 'ServiceController@store']);

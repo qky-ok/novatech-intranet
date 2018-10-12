@@ -16,7 +16,7 @@
 
     <div class="result-set services" style="width: 200px;">
         {!! Form::open(['method' => 'POST', 'route' => ['services.list'], 'class' => 'service-form']) !!}
-            <div class="form-group @if ($errors->has('cas_stock')) has-error @endif">
+            <div class="form-group">
                 {!! Form::label('service_list_type', 'Seleccione una lista') !!}
                 <select class="form-control" name="service_list_type">
                     <option value="0">Listar todo</option>
@@ -32,6 +32,16 @@
                 </select>
             </div>
             {!! Form::submit('Listar', ['class' => 'btn btn-primary']) !!}
+        {!! Form::close() !!}
+    </div>
+
+    <div class="result-set services" style="width: 200px;">
+        {!! Form::open(['method' => 'POST', 'route' => ['services.list_by_id'], 'class' => 'service-form']) !!}
+        <div class="form-group">
+            {!! Form::label('service_id', 'Introduzca un ID de Ticket') !!}
+            <input type="text" class="form-control" name="service_id" />
+        </div>
+        {!! Form::submit('Listar x ID', ['class' => 'btn btn-primary']) !!}
         {!! Form::close() !!}
     </div>
 @endsection

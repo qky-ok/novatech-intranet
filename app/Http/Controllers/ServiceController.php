@@ -46,6 +46,26 @@ class ServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function listById(Request $request){
+        Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
+        Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
+        Controller::addJsFooter('/js/service.js');
+
+        $service_id = $request->get('service_id', '');
+        if($service_id != ''){
+            $result = Service::where('id', $service_id)->get();
+        }else{
+            $result = Service::all();
+        }
+
+        return view('service.list', compact('result'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function list(Request $request){
         Controller::addCss('/js/datatables_1.10.16/datatables.min.css');
         Controller::addJsFooter('/js/datatables_1.10.16/datatables.min.js');
